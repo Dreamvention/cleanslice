@@ -1,6 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import {UsersSlices} from '../slices/users/api';
-
+import { UsersSlices } from '../slices/users/api';
 
 @Module({})
 export class SlicesModule {

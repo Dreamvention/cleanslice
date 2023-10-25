@@ -3,6 +3,9 @@
   "extends": "../../../api/tsconfig.json",
   "compilerOptions": {
     "moduleResolution": "node",
-    "target": "ES2018"
+    "target": "ES2018",
+    "paths": {
+      "@prisma/client": ["./node_modules/@prisma/client"]
+    }
   }
 }

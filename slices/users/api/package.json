@@ -2,17 +2,18 @@
   "name": "slice-users-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
-  "scripts": {
-    "build": "tsc"
-  },
+  "main": "index",
   "author": "",
   "license": "ISC",
-  
   "dependencies": {
-    "@nestjs/common": "^10.2.7"
+    "@nestjs/common": "^10.2.7",
+    "@nestjs/swagger": "^7.1.14",
+    "@prisma/client": "../../../api/node_modules/@prisma/client",
+    "class-validator": "^0.14.0"
   },
   "devDependencies": {
+    "@nestjs/testing": "^10.2.7",
+    "@types/jest": "^29.5.6",
     "@types/node": "^20.8.7"
   }
 }

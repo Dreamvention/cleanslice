@@ -11,7 +11,7 @@ function runPrebuild() {
     if (slices) {
       for (const slice of slices) {
         const className = `${slice.charAt(0).toUpperCase() + slice.slice(1)}Slices`;
-        importSlices += `import {${className}} from '../slices/${slice}/api';\n`;
+        importSlices += `import { ${className} } from '../slices/${slice}/api';\n`;
         pushSlices += `result.push(...${className});\n`;
       }
     }

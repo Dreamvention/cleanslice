@@ -1,0 +1,31 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "npm run generate && nuxt dev",
+    "generate": "openapi --input ../api/swagger-spec.json --output ./data/repositories/api --name ApiRepository --client axios ",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@invictus.codes/nuxt-vuetify": "^0.3.0",
+    "@nuxt/devtools": "latest",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "axios": "^1.5.1",
+    "nuxt": "^3.7.4",
+    "openapi-typescript-codegen": "^0.25.0",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
+    "pinia": "^2.1.7",
+    "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.8.0"
+  },
+  "overrides": {
+    "vue": "latest"
+  }
+}

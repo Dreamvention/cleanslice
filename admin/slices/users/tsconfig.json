@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "../../../app/.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "paths": {
+      "~": [".", "../../../app"],
+      "~/*": ["./*", "../../../app/*"],
+      "@": [".", "../../../app"],
+      "@/*": ["./*", "../../../app/*"],
+      "~~": [".", "../../../app"],
+      "~~/*": ["./*", "../../../app/*"],
+      "@@": [".", "../../../app"],
+      "@@/*": ["./*", "../../../app/*"],
+      "assets": ["./assets", "../../../app/assets"],
+      "public": ["./public", "../../../app/public"],
+      "public/*": ["./public/*", "../../../app/public/*"],
+      "#app": ["../../../app/node_modules/nuxt/dist/app"],
+      "#app/*": ["../../../app/node_modules/nuxt/dist/app/*"],
+      "vue-demi": ["../../../app/node_modules/nuxt/dist/app/compat/vue-demi"],
+      "pinia": ["../../../app/node_modules/pinia/dist/pinia"],
+      "#vue-router": ["../../../app/.nuxt/vue-router"],
+      "#imports": ["../../../app/.nuxt/imports"],
+      "#build": ["../../../app/.nuxt"],
+      "#build/*": ["../../../app/.nuxt/*"],
+      "#components": ["../../../app/.nuxt/components"]
+    }
+  }
+}

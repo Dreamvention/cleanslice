@@ -1,9 +1,9 @@
 import { Nitro } from 'nitropack';
 import typescript from '@rollup/plugin-typescript';
-import { registerSlices } from '../slices/core/nuxt';
+import { registerSlices } from './registerSlices';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-console.log(registerSlices())
+console.log(registerSlices());
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@invictus.codes/nuxt-vuetify', '@pinia/nuxt'],

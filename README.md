@@ -7,9 +7,22 @@
 
 # Setup API
 
-
-
 # Setup Prisma (Database)
 
-
 # File structure
+
+# Beaufactor
+
+- Do:
+
+```js
+const [password, salt] = user.password.split('.');
+```
+
+- Don't:
+
+```js
+const parts = user.password.split('.');
+password = parts[0];
+salt = parts[1];
+```

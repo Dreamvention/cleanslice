@@ -9,9 +9,9 @@
     "generate": "npx prisma-import --force",
     "dev": "npm run start:dev",
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
-    "start": "nest start --entryFile=api/src/main",
-    "start:dev": "nest start --watch --entryFile=api/src/main",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/api/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -19,7 +19,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./apps/api/test/jest-e2e.json",
     "premigrate": "npx prisma-import --force",
     "migrate": "dotenv -e .env.dev -- npx prisma migrate dev && dotenv -e .env.dev -- npx prisma generate",
     "preinstall": "../slices/core/nest/preinstall.sh"
@@ -80,8 +80,8 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/libs/"
+      "<rootDir>/libs/",
+      "<rootDir>/apps/"
     ],
     "moduleNameMapper": {
       "^@app/test-library(|/.*)$": "<rootDir>/libs/test-library/src/$1"
@@ -89,7 +89,7 @@
   },
   "prisma": {
     "import": {
-      "schemas": "../{slices,api}/**/!(schema).prisma",
+      "schemas": "./**/!(schema).prisma",
       "output": "./prisma/schema.prisma"
     }
   }

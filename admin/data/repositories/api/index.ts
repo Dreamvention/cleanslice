@@ -14,3 +14,4 @@ export type { CreateUserDto } from './models/CreateUserDto';
 export type { UpdateUserDto } from './models/UpdateUserDto';
 
 export { DefaultService } from './services/DefaultService';
+export { UsersService } from './services/UsersService';

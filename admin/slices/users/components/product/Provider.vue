@@ -14,9 +14,7 @@
 import { ApiRepository } from "@/data/repositories";
 const app = useNuxtApp();
 // const items = ref('');
-const items = await app.$di
-  .resolve(ApiRepository)
-  .default.usersControllerGetUser("1");
+const items = await app.$di.resolve(ApiRepository).users.getUsers();
 const item = ref("null");
 
 const store = useProducts2();

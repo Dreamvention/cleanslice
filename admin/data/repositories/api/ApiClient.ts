@@ -7,12 +7,14 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { AxiosHttpRequest } from './core/AxiosHttpRequest';
 
 import { DefaultService } from './services/DefaultService';
+import { UsersService } from './services/UsersService';
 
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 
 export class ApiClient {
 
     public readonly default: DefaultService;
+    public readonly users: UsersService;
 
     public readonly request: BaseHttpRequest;
 
@@ -30,6 +32,7 @@ export class ApiClient {
         });
 
         this.default = new DefaultService(this.request);
+        this.users = new UsersService(this.request);
     }
 }
 

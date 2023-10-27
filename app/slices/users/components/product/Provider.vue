@@ -2,6 +2,7 @@
   {{ store.doubleCount }}
   {{ items }}
   <ProductDetails />
+  <v-btn color="primary"> Button </v-btn>
 </template>
 
 <script lang="ts" setup>

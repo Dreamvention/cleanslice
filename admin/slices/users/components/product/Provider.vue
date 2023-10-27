@@ -1,16 +1,23 @@
 <template>
   <ProductDetails />
+  <div>
+    {{ store.doubleCount }}
+    {{ items }}
+  </div>
+  <v-row>
+    <LocaleSwitcher />
+  </v-row>
+  {{ $t("home") }}
 </template>
 
 <script lang="ts" setup>
-// import { ApiRepository } from "@/data/repositories";
-// import { useProducts2 } from '@/stores/products2';
-// const app = useNuxtApp();
+import { ApiRepository } from "@/data/repositories";
+const app = useNuxtApp();
 // const items = ref('');
-// const items = await app.$di
-//   .resolve(ApiRepository)
-//   .default.appControllerGetProducts();
-// const item = ref("null");
+const items = await app.$di
+  .resolve(ApiRepository)
+  .default.usersControllerGetUser("1");
+const item = ref("null");
 
-// const store = useProducts2();
+const store = useProducts2();
 </script>

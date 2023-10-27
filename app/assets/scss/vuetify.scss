@@ -1,0 +1,14 @@
+/**
+ * assets/scss/vuetify.scss
+ *
+ * Configures SASS variables and Vuetify overwrites
+ */
+
+// https://next.vuetifyjs.com/features/sass-variables/`
+// @use "vuetify" with (
+//   $primary: #00565d !default
+// );
+
+@use 'vuetify' with (
+  $primary: #999933 !default
+);

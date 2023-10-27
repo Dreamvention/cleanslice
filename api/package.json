@@ -5,7 +5,7 @@
   "author": "",
   "private": true,
   "scripts": {
-    "predev": "node ../slices/core/nest/prebuild.js && npm run migrate",
+    "predev": "npm run migrate",
     "generate": "npx prisma-import --force",
     "dev": "npm run start:dev",
     "build": "nest build",

@@ -3,7 +3,6 @@ import typescript from '@rollup/plugin-typescript';
 import { registerSlices } from './registerSlices';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-console.log(registerSlices());
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@invictus.codes/nuxt-vuetify', '@pinia/nuxt'],
@@ -13,6 +12,7 @@ export default defineNuxtConfig({
       nitro.options.moduleSideEffects.push('reflect-metadata');
     },
   },
+  css: ['~/assets/scss/main.scss'],
   vite: {
     plugins: [typescript()],
   },

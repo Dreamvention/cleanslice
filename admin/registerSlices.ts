@@ -1,9 +1,8 @@
-import * as fs from 'fs';
+import * as fs from "fs";
 export const registerSlices = (): string[] => {
-  const slices = fs.readdirSync('./slices');
+  const slices = fs.readdirSync("./slices");
   if (!slices.length) return [];
-
   return slices
-    ?.filter((slice) => slice !== 'core' && fs.existsSync(`./slices/${slice}`))
+    ?.filter((slice) => fs.existsSync(`./slices/${slice}`))
     .map((slice) => `./slices/${slice}`);
 };

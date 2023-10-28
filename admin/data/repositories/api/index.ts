@@ -12,6 +12,7 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { CreateUserDto } from './models/CreateUserDto';
 export type { UpdateUserDto } from './models/UpdateUserDto';
+export type { UserDto } from './models/UserDto';
 
 export { DefaultService } from './services/DefaultService';
 export { UsersService } from './services/UsersService';

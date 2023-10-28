@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { CreateUserDto } from '../models/CreateUserDto';
 import type { UpdateUserDto } from '../models/UpdateUserDto';
+import type { UserDto } from '../models/UserDto';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
@@ -14,10 +15,10 @@ export class UsersService {
 
     /**
      * List all users
-     * @returns any
+     * @returns UserDto
      * @throws ApiError
      */
-    public getUsers(): CancelablePromise<any> {
+    public getUsers(): CancelablePromise<Array<UserDto>> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/users',
@@ -44,12 +45,12 @@ export class UsersService {
     /**
      * Get a user
      * @param id
-     * @returns any
+     * @returns UserDto
      * @throws ApiError
      */
     public getUser(
         id: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<UserDto> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/users/{id}',

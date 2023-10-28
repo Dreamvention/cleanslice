@@ -1,32 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
-  "extends": "../../.nuxt/tsconfig.json",
+  "extends": "../setup/tsconfig.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ES2022",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "paths": {
-      "~": [".", "../../"],
-      "~/*": ["./*", "../../*"],
-      "@": [".", "../../"],
-      "@/*": ["./*", "../../*"],
-      "~~": [".", "../../"],
-      "~~/*": ["./*", "../../*"],
-      "@@": [".", "../../"],
-      "@@/*": ["./*", "../../*"],
-      "assets": ["./assets", "../../assets"],
-      "public": ["./public", "../../public"],
-      "public/*": ["./public/*", "../../public/*"],
-      "#app": ["../../node_modules/nuxt/dist/app"],
-      "#app/*": ["../../node_modules/nuxt/dist/app/*"],
-      "vue-demi": ["../../node_modules/nuxt/dist/app/compat/vue-demi"],
-      "pinia": ["../../node_modules/pinia/dist/pinia"],
-      "#vue-router": ["../../.nuxt/vue-router"],
-      "#imports": ["../../.nuxt/imports"],
-      "#build": ["../../.nuxt"],
-      "#build/*": ["../../.nuxt/*"],
-      "#components": ["../../.nuxt/components"]
-    }
+    "verbatimModuleSyntax": false
   }
 }

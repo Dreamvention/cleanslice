@@ -5,6 +5,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "verbatimModuleSyntax": false
   }
 }

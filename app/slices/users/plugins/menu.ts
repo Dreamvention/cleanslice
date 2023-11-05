@@ -1,6 +1,6 @@
-import { useMenu } from '@/stores/menu';
+// Add an item to the common Menu
 
 export default defineNuxtPlugin((nuxtApp) => {
   const menu = useMenu();
-  menu.addItem('Home');
+  menu.addItem('users');
 });

@@ -53,10 +53,21 @@ export default defineNuxtConfig({
     moduleOptions: {
       /* vite-plugin-vuetify options */
       autoImport: true,
-      styles: { configFile: '~/assets/scss/vuetify.scss' },
+      // Read more https://www.npmjs.com/package/webpack-plugin-vuetify
+      // styles: { configFile: '~/assets/scss/vuetify.scss' },
     },
   },
 });
+```
+
+replace in `app.vue`
+
+```tsx
+<template>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+</template>
 ```
 
 ### Pinia
@@ -77,7 +88,7 @@ export default defineNuxtConfig({
 
 ### Di
 
-run `npm i tsyringe reflect-metadata`
+run `npm i tsyringe reflect-metadata tslib`
 run `npm i -D @rollup/plugin-typescript`
 
 add to `nuxt.config.ts`
@@ -95,6 +106,10 @@ export default defineNuxtConfig({
   //...
   vite: {
     plugins: [typescript()],
+  },
+  build: {
+    // Required for DI
+    transpile: ['tslib'],
   },
 });
 ```
@@ -157,10 +172,6 @@ export * from './api/api.repository';
 
 run `npm i -D axios axios-retry`
 
-### utils
-
-run `npm i -D tslib`
-
 ### i18n
 
 run `npm i -D @nuxtjs/i18n@next`
@@ -181,7 +192,7 @@ add to `tsconfig.json`
 ```json
 {
   "compilerOptions": {
-    "outDir": "./dist"
+    "allowJs": false
   }
 }
 ```

@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export { ApiRepository } from './ApiRepository';
+export { ApiClient } from './ApiClient';
 
 export { ApiError } from './core/ApiError';
 export { BaseHttpRequest } from './core/BaseHttpRequest';
@@ -12,5 +12,7 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { CreateUserDto } from './models/CreateUserDto';
 export type { UpdateUserDto } from './models/UpdateUserDto';
+export type { UserDto } from './models/UserDto';
 
 export { DefaultService } from './services/DefaultService';
+export { UsersService } from './services/UsersService';

@@ -14,6 +14,8 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  // Important! Create a swagger spec file for Code Generator, which is used in the frontend.
   fs.writeFileSync('swagger-spec.json', JSON.stringify(document));
   await app.listen(3333);
 }

@@ -1,8 +1,0 @@
-{
-  "name": "slice-users-app",
-  "private": true,
-  "type": "module",
-  "devDependencies": {
-    "nuxt": "^3.7.4"
-  }
-}

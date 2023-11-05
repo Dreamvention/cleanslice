@@ -17,8 +17,8 @@ export class ApiAxios extends BaseHttpRequest {
     this.axiosInstance.interceptors.response.use(
       (response) => response,
       async (error) => {
+        // Create handleError utils method in slices/common/utils
         handleError(error);
-        return Promise.reject(error);
       },
     );
   }

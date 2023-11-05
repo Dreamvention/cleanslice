@@ -4,28 +4,32 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "npm run generate && nuxt dev",
-    "generate": "openapi --input ../api/swagger-spec.json --output ./data/repositories/api --name ApiRepository --client axios ",
+    "build:aws": "NITRO_PRESET=aws-lambda nuxt build",
+    "build:api": "openapi --input ../api/swagger-spec.json --output ./data/repositories/api --name ApiClient --client axios ",
+    "dev": "npm run build:api && nuxt dev",
+    "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
     "@invictus.codes/nuxt-vuetify": "^0.3.0",
     "@nuxt/devtools": "latest",
+    "@nuxtjs/i18n": "^8.0.0-rc.5",
     "@rollup/plugin-typescript": "^11.1.5",
-    "axios": "^1.5.1",
-    "nuxt": "^3.7.4",
+    "axios": "^1.6.0",
+    "axios-retry": "^3.8.1",
+    "nuxt": "^3.8.0",
     "openapi-typescript-codegen": "^0.25.0",
-    "vue": "^3.3.4",
+    "sass": "^1.69.5",
+    "sass-loader": "^13.3.2",
+    "vue": "^3.3.7",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
     "pinia": "^2.1.7",
     "reflect-metadata": "^0.1.13",
+    "tslib": "^2.6.2",
     "tsyringe": "^4.8.0"
-  },
-  "overrides": {
-    "vue": "latest"
   }
 }

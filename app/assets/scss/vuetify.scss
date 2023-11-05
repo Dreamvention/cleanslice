@@ -5,10 +5,17 @@
  */
 
 // https://next.vuetifyjs.com/features/sass-variables/`
-// @use "vuetify" with (
-//   $primary: #00565d !default
-// );
+// @forward 'vuetify/settings' with (
+//     Turn off color pallets to save 30kb if you are not using it.
+//     $color-pack: false,
 
-@use 'vuetify' with (
-  $primary: #999933 !default
-);
+//     $body-font-family: 'Roboto', sans-serif !default;
+//     $font-size-root: 1rem !default;
+//     $line-height-root: 1.5 !default;
+//     $border-color-root: rgba(var(--v-border-color), var(--v-border-opacity)) !default;
+//     $border-radius-root: 4px !default;
+//     $border-style-root: solid !default;
+// );
+@import 'vuetify/styles';
+@import 'styles/text-field';
+@import 'styles/btn';

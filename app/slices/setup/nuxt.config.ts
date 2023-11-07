@@ -23,6 +23,7 @@ export default defineNuxtConfig({
   },
   i18n: {
     // Required for i18n
+    vueI18n: './configs/i18n.config.ts',
     // read more https://i18n.nuxtjs.org/options/vue-i18n
     strategy: 'no_prefix',
     defaultLocale: 'en',

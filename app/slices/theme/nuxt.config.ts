@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import vuetifyOptions from '../../configs/vuetify.config';
 
-import vuetifyOptions from '../../vuetify.config';
 export default defineNuxtConfig({
   modules: ['@invictus.codes/nuxt-vuetify'],
   css: ['@/slices/theme/assets/scss/main.scss'],

@@ -1,1 +1,1 @@
-<template>Hello</template>
+<template>{{ $t('welcome') }}</template>

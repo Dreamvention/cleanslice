@@ -1,10 +1,8 @@
 <template>
-  <v-select v-model="locale" :items="items" label="Select" />
+  <v-select v-model="locale" :items="localeCodes" label="Select" @update:model-value="setLocaleCookie(locale)" />
 </template>
 
 <script lang="ts" setup>
-const { locale } = useI18n();
-
-const items = ['en', 'fr'];
+// Read more https://i18n.nuxtjs.org/api/composables#usebrowserlocale
+const { locale, setLocaleCookie, localeCodes } = useI18n();
 </script>
-```

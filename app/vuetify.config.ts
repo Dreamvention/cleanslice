@@ -1,4 +1,4 @@
-import colors from './util/colors';
+import colors from './slices/theme/assets/scss/util/colors';
 
 export default {
   theme: {

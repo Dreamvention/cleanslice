@@ -92,6 +92,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/i18n'],
   i18n: {
     // required for i18n
+    vueI18n: './configs/i18n.config.ts',
     // read more https://i18n.nuxtjs.org/options/vue-i18n
     strategy: 'no_prefix',
     defaultLocale: 'en',
@@ -114,7 +115,7 @@ add to `tsconfig.json`
 }
 ```
 
-create file `i18n.config.ts` in root
+create file `i18n.config.ts` in `rootDir/configs`
 
 ```ts
 // import your translations here.

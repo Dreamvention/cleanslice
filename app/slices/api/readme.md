@@ -4,6 +4,10 @@ Dependencies:
 
 - setup
 
+### Axios
+
+run `npm i -D axios axios-retry`
+
 ### CodeGen
 
 run `npm i -D openapi-typescript-codegen`
@@ -14,7 +18,7 @@ add to `package.json`
 {
   "scripts": {
     //...
-    "build:api": "sh ./slices/setup/build.sh",
+    "build:api": "sh ./slices/api/build.sh",
     "dev": "npm run build:api && nuxt dev"
   }
 }
@@ -29,7 +33,7 @@ add file `./data/repositories/api/api.repository.ts`
 /* eslint-disable */
 import { injectable, inject } from 'tsyringe';
 import type { OpenAPIConfig } from './core/OpenAPI';
-import { ApiAxios } from '@/slices/setup/apiAxios';
+import { ApiAxios } from '../../../apiAxios';
 import { ApiClient } from './ApiClient';
 
 @injectable()
@@ -46,6 +50,39 @@ add file `./data/repositories/index.ts`
 export * from './api/api.repository';
 ```
 
-### Axios
+create file `api.config.ts` in `rootDir/configs`
 
-run `npm i -D axios axios-retry`
+```ts
+export const apiConfig = {
+  BASE: 'http://localhost:3333',
+  VERSION: '1.0',
+  WITH_CREDENTIALS: false,
+  CREDENTIALS: 'include',
+  TOKEN: undefined,
+  USERNAME: undefined,
+  PASSWORD: undefined,
+  HEADERS: undefined,
+  ENCODE_PATH: undefined,
+};
+```
+
+### How to use API slice
+
+in other slices to use `@/data/repository/api` copy the following 2 files
+
+- `data/repositories/api.ts`
+
+```ts
+/** This is a proxy Api Repository
+ *  Install @slices/api
+ */
+
+export * from '@/slices/api/data/repositories/api/api.repository';
+export * from '@/slices/api/data/repositories/api';
+```
+
+- `data/repositories/index.ts`
+
+```ts
+export * from './api';
+```

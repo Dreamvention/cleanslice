@@ -4,11 +4,11 @@
 
 run `npm i -D sass sass-loader`
 
-add to `nuxt.config.ts`
+add to your `nuxt.config.ts`
 
 ```ts
 export default defineNuxtConfig({
-  css: ['~/slices/vuetify/assets/scss/main.scss'],
+  css: ['@/slices/vuetify/assets/scss/main.scss'],
 });
 ```
 
@@ -16,10 +16,12 @@ export default defineNuxtConfig({
 
 run `npm i -D @invictus.codes/nuxt-vuetify`
 
-add to `nuxt.config.ts`
+copy `./nuxt.config.ts` into `rootDir/configs`
+
+add to your `nuxt.config.ts`
 
 ```ts
-import vuetifyOptions from './slices/vuetify/assets/scss/vuetify.config';
+import vuetifyOptions from '../../configs/vuetify.config';
 export default defineNuxtConfig({
   modules: ['@invictus.codes/nuxt-vuetify'],
   //...

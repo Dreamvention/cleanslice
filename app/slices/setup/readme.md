@@ -1,8 +1,11 @@
 # Setup
 
-install nuxt `npx nuxi@latest init` and name it `app`
-create folder `./slices`
-copy folder `setup` into `./slices`
+### Install CleanSlice on Nuxt
+
+- install nuxt `npx nuxi@latest init` and name it `app`
+- create folder `./slices`
+- copy folder `setup` into `./slices`
+
 create file `./registerSlices.ts`
 
 ```ts
@@ -23,9 +26,9 @@ export default defineNuxtConfig({
 });
 ```
 
-### Pinia
+### Install Pinia
 
-run `npm i @pinia/nuxt pinia`
+- run `npm i @pinia/nuxt pinia`
 
 add to slice `nuxt.config.ts`
 
@@ -40,10 +43,10 @@ export default defineNuxtConfig({
 });
 ```
 
-### Di
+### Install Di
 
-run `npm i tsyringe reflect-metadata tslib`
-run `npm i -D @rollup/plugin-typescript`
+- run `npm i tsyringe reflect-metadata tslib`
+- run `npm i -D @rollup/plugin-typescript`
 
 add to slice `nuxt.config.ts`
 
@@ -81,11 +84,11 @@ add to root `tsconfig.json`
 }
 ```
 
-### i18n
+### Install i18n
 
-run `npm i -D @nuxtjs/i18n@next`
+- run `npm i -D @nuxtjs/i18n@next`
 
-add to `nuxt.config.ts`
+- add to `nuxt.config.ts`
 
 ```ts
 export default defineNuxtConfig({

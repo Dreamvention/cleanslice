@@ -2,6 +2,17 @@
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
+## Slices
+
+- [Setup](./slices/setup/readme.md)
+- [Api](./slices/api/readme.md)
+- [Theme](./slices/theme/readme.md)
+- [Capacitor](./slices/capacitor/readme.md)
+- [Common](./slices/common/readme.md)
+- [Users with APi](./slices/users/readme.md)
+- [Users with Gateway](./slices/users-gateway/readme.md)
+- [Users with Service](./slices/users-service/readme.md)
+
 ## Setup
 
 Make sure to install the dependencies:

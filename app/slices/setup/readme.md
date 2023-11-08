@@ -1,34 +1,12 @@
 # Setup
 
-### Install CleanSlice on Nuxt
-
-- install nuxt `npx nuxi@latest init` and name it `app`
-- create folder `./slices`
-- copy folder `setup` into `./slices`
-
-create file `./registerSlices.ts`
-
-```ts
-import * as fs from 'fs';
-export const registerSlices = (): string[] => {
-  const slices = fs.readdirSync('./slices');
-  if (!slices.length) return [];
-  return slices?.filter((slice) => fs.existsSync(`./slices/${slice}`)).map((slice) => `./slices/${slice}`);
-};
-```
-
-add to root `nuxt.config.ts`
-
-```ts
-export default defineNuxtConfig({
-  //...
-  extends: [...registerSlices()],
-});
-```
-
 ### Install Pinia
 
-- run `npm i @pinia/nuxt pinia`
+run in terminal
+
+```bash
+npm i @pinia/nuxt pinia
+```
 
 add to slice `nuxt.config.ts`
 
@@ -45,8 +23,12 @@ export default defineNuxtConfig({
 
 ### Install Di
 
-- run `npm i tsyringe reflect-metadata tslib`
-- run `npm i -D @rollup/plugin-typescript`
+run in terminal
+
+```bash
+npm i tsyringe reflect-metadata tslib`
+npm i -D @rollup/plugin-typescript
+```
 
 add to slice `nuxt.config.ts`
 
@@ -86,9 +68,13 @@ add to root `tsconfig.json`
 
 ### Install i18n
 
-- run `npm i -D @nuxtjs/i18n@next`
+run in terminal
 
-- add to `nuxt.config.ts`
+```bash
+npm i -D @nuxtjs/i18n@next
+```
+
+add to slice `nuxt.config.ts`
 
 ```ts
 export default defineNuxtConfig({
@@ -108,7 +94,7 @@ export default defineNuxtConfig({
 });
 ```
 
-add to `tsconfig.json`
+add to root `tsconfig.json`
 
 ```json
 {
@@ -118,7 +104,7 @@ add to `tsconfig.json`
 }
 ```
 
-create file `i18n.config.ts` in `rootDir/configs`
+create file `i18n.config.ts` in `root/configs`
 
 ```ts
 // import your translations here.
@@ -139,6 +125,8 @@ export default defineI18nConfig(() => ({
   },
 }));
 ```
+
+### How to use i18n in slices
 
 In every slices extend languages like so
 

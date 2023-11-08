@@ -1,17 +1,25 @@
 # Capacitor
 
-run `npm i -D @capacitor/cli`
+Dependencies
 
-run `cd slices/capacitor`
+- Xcode (MAC OS)
+- Android Studio
 
-run `npm i`
+### Install Capacitor
 
-add to `package.json`
+run in terminal
+
+```bash
+npm i -D @capacitor/cli
+cd slices/capacitor
+npm i
+```
+
+add to root `package.json`
 
 ```json
 {
   "scripts": {
-    //...
     "capacitor-update": "npm run generate && sh ./slices/capacitor/build.sh",
     "build:ios": "npm run capacitor-update && cd slices/capacitor  && npx cap sync &&  npx cap open ios",
     "build:android": "npm run capacitor-update && cd slices/capacitor  && npx cap sync && npx cap open android"
@@ -19,7 +27,7 @@ add to `package.json`
 }
 ```
 
-add to `nuxt.config.ts`
+add to slice `nuxt.config.ts`
 
 ```ts
 export default defineNuxtConfig({

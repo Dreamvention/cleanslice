@@ -6,13 +6,21 @@ Dependencies:
 
 ### Axios
 
-run `npm i -D axios axios-retry`
+Run in terminal
+
+```bash
+npm i -D axios axios-retry
+```
 
 ### CodeGen
 
-run `npm i -D openapi-typescript-codegen`
+Run in terminal
 
-add to `package.json`
+```bash
+npm i -D openapi-typescript-codegen
+```
+
+Add to `package.json`
 
 ```json
 {
@@ -24,7 +32,7 @@ add to `package.json`
 }
 ```
 
-add file `./data/repositories/api/api.repository.ts`
+Add file `./data/repositories/api/api.repository.ts`
 
 ```ts
 /* generated using openapi-typescript-codegen -- do no edit */
@@ -44,13 +52,13 @@ export class ApiRepository extends ApiClient {
 }
 ```
 
-add file `./data/repositories/index.ts`
+Add file `./data/repositories/index.ts`
 
 ```ts
 export * from './api/api.repository';
 ```
 
-create file `api.config.ts` in `rootDir/configs`
+Create file `api.config.ts` in `rootDir/configs`
 
 ```ts
 export const apiConfig = {
@@ -66,9 +74,9 @@ export const apiConfig = {
 };
 ```
 
-### How to use API slice
+### How to use API in slices
 
-in other slices to use `@/data/repository/api` copy the following 2 files
+In other slices to use `@/data/repository/api` copy the following 2 files
 
 - `data/repositories/api.ts`
 

@@ -2,9 +2,13 @@
 
 ### Install SCSS
 
-run `npm i -D sass sass-loader`
+Run in terminal
 
-add to your `nuxt.config.ts`
+```bash
+npm i -D sass sass-loader
+```
+
+Add to slice `nuxt.config.ts`
 
 ```ts
 export default defineNuxtConfig({
@@ -12,13 +16,17 @@ export default defineNuxtConfig({
 });
 ```
 
-### Vuetify
+### Install Vuetify
 
-run `npm i -D @invictus.codes/nuxt-vuetify`
+Run in terminal
 
-copy `./nuxt.config.ts` into `rootDir/configs`
+```bash
+npm i -D @invictus.codes/nuxt-vuetify
+```
 
-add to your `nuxt.config.ts`
+Copy `./nuxt.config.ts` into `root/configs`
+
+Add to slice `nuxt.config.ts`
 
 ```ts
 import vuetifyOptions from '../../configs/vuetify.config';
@@ -37,7 +45,7 @@ export default defineNuxtConfig({
 });
 ```
 
-replace in `app.vue`
+replace in root `app.vue`
 
 ```tsx
 <template>

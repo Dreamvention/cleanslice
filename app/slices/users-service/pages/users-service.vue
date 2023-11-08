@@ -1,3 +1,3 @@
 <template>
-  <UserGatewayItemProvider />
+  <UserServiceItemProvider />
 </template>

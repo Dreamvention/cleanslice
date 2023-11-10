@@ -41,7 +41,7 @@ export default defineNuxtConfig({
 - [Theme](./slices/theme/readme.md)
 - [Capacitor](./slices/capacitor/readme.md)
 - [Common](./slices/common/readme.md)
-- [Users with APi](./slices/users/readme.md)
+- [Users with Repository](./slices/users/readme.md)
 - [Users with Gateway](./slices/users-gateway/readme.md)
 - [Users with Service](./slices/users-service/readme.md)
 
@@ -83,7 +83,7 @@ import { User } from '@/domain/entities';
 const app = useNuxtApp();
 
 // We are using UsersGateway to fetch IUserData[] and then are mapping it to a User Entity inside the component.
-// This may be ok in a case like this where the is little logic.
+// This may be ok in a case like this where there is little to no logic.
 // If you notice that you are doing more logic inside the component, move it to a dedicated UsersService.
 const items = (await app.$di.resolve(UsersGateway).getUsers()).map((item) => new User(item));
 ```
@@ -105,11 +105,11 @@ const items = await app.$di.resolve(UsersService).getUsers();
 
 Use this pattern when you are implementing Application logic inside the Domain and require Services. You can add application specific logic into your Services (aka Use Cases) and use them throughout your UI layer.
 
-### How to start
+### Which pattern to start with?
 
-Start by implementing the simple pattern if you are also developing the API. You can rapidly prototype your application without having to write lots of abstractions.
+Start by implementing the simple pattern if you are also developing the API. You can rapidly prototype your application without having to write lots of abstractions and can take advantage of the OpenAPI CodeGen feature ([Api slice](./slices/api/readme.md))
 
-Later on, when you learn the details of your Business and Application logic, you can refactor your Slices to fit either the Gateway or Service pattern.
+If you are not in control of the API, you can start with the Gateway pattern. This allows you to add a layer of abstraction on top of a Repository, that is often a third-party SDK.
 
 ## Setup
 

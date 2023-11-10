@@ -4,7 +4,7 @@ Dependencies:
 
 - setup
 
-### Axios
+### Install Axios
 
 Run in terminal
 
@@ -12,7 +12,7 @@ Run in terminal
 npm i -D axios axios-retry
 ```
 
-### CodeGen
+### Install CodeGen
 
 Run in terminal
 

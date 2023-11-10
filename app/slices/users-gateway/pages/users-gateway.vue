@@ -1,3 +1,3 @@
 <template>
-  <UserGatewayItemProvider />
+  <div><UserGatewayItemProvider /></div>
 </template>

@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UserDto } from '@/data/repositories/api';
+import { UserDto } from '@/data/repositories';
 defineProps({
   item: {
     type: Object as PropType<UserDto>,

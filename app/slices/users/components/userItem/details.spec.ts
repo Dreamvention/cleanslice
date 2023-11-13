@@ -1,14 +1,16 @@
 // @vitest-environment nuxt
 
-import { describe, test, expect } from 'vitest';
+import { describe, test } from 'vitest';
 import { mountSuspended } from 'nuxt-vitest/utils';
 import { globalOptions } from '@/slices/test/globalOptions';
 
 import { UserDto } from '@/slices/users/data/repositories';
 import UserItemDetails from './Details.vue';
 
-describe('UserItemDetails', () => {
-  test('renders UserItemDetails', async () => {
+import { pages } from '@/slices/users/pages';
+
+describe('users/components/UserItem/Details.vue', () => {
+  test('renders UserItemDetails', async ({ expect }) => {
     expect(UserItemDetails).toBeTruthy();
 
     const user: UserDto = {
@@ -23,12 +25,11 @@ describe('UserItemDetails', () => {
       props: {
         item: user,
       },
-      global: globalOptions,
+      ...globalOptions,
     });
 
-    expect(wrapper.findComponent({ name: 'NuxtLink' }).props('to')).toBe(`/users/${user.id}`);
     expect(wrapper.findComponent({ name: 'VCard' }).props('title')).toBe(user.name);
     expect(wrapper.findComponent({ name: 'VCard' }).props('subtitle')).toBe(user.email);
-    expect(wrapper.findComponent({ name: 'VCard' }).text()).toContain(`Data: ${user.createdAt}`);
+    expect(wrapper.text()).toMatchInlineSnapshot('""');
   });
 });

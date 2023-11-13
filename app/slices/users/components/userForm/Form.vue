@@ -1,16 +1,32 @@
 <template>
+  <CommonHeading>Create User</CommonHeading>
+
   <v-form ref="form" v-model="valid" lazy-validation>
-    <v-text-field v-model="user.name" label="Name" :rules="nameRules" required density="compact"></v-text-field>
+    <v-text-field
+      v-model="user.name"
+      label="Name"
+      :rules="rules.name"
+      required
+      variant="outlined"
+      class="ma-1"
+    ></v-text-field>
 
-    <v-text-field v-model="user.email" label="Email" :rules="emailRules" required density="compact"></v-text-field>
+    <v-text-field
+      v-model="user.email"
+      label="Email"
+      :rules="rules.email"
+      required
+      variant="outlined"
+      class="ma-1"
+    ></v-text-field>
 
-    <v-btn :disabled="!valid" @click="submit">Submit</v-btn>
-    <v-btn @click="reset" color="primary">Reset</v-btn>
+    <v-btn :disabled="!valid" @click="submit" class="ma-1">Submit</v-btn>
+    <v-btn @click="reset" color="primary" class="ma-1">Reset</v-btn>
   </v-form>
 </template>
 
 <script lang="ts" setup>
-import { UserDto } from '@/data/repositories/api';
+import { UserDto } from '@/data/repositories';
 import { ref } from 'vue';
 const props = defineProps({
   item: {
@@ -19,18 +35,14 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits<{ (e: 'save', data: UserDto): void }>();
 const valid = ref(false);
-const user = ref(props.item);
+const user = ref<UserDto>(props.item);
 
-const nameRules = [
-  (v) => !!v || 'Name is required',
-  (v) => (v && v.length <= 10) || 'Name must be less than 10 characters',
-];
-const emailRules = [(v) => !!v || 'E-mail is required', (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid'];
+const rules = useUserRules();
 
 const submit = () => {
-  // Here you would typically make an API call to submit your form data
-  alert('Form submitted!');
+  emit('save', user.value);
 };
 
 const reset = () => {

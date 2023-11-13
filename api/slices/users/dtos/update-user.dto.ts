@@ -1,23 +1,22 @@
 import { IUserData } from '../domain/entities';
 import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto implements IUserData {
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
   @IsNotEmpty()
   @IsOptional()
   public name: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
   @IsNotEmpty()
   @IsOptional()
   public email: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
-  public password: string;
+  public password?: string;
 }

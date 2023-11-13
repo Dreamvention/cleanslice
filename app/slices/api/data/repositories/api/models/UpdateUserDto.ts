@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 export type UpdateUserDto = {
-    name: string;
-    email: string;
-    password: string;
+    name?: string;
+    email?: string;
+    password?: string;
 };
 

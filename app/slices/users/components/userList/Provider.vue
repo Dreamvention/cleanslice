@@ -1,5 +1,5 @@
 <template>
-  <UserItemDetails :item="item" />
+  <UserListTable :items="items" />
 </template>
 
 <script lang="ts" setup>
@@ -13,9 +13,5 @@ const app = useNuxtApp();
 // Use this approach for simple cases and extend to gateways or services
 // once you need more control.
 
-const { params } = useRoute();
-
-const userId = params.id;
-
-const item = await app.$di.resolve(ApiRepository).users.getUser(userId);
+const items = await app.$di.resolve(ApiRepository).users.getUsers();
 </script>

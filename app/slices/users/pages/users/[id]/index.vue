@@ -1,3 +1,3 @@
 <template>
-  <UserListProvider />
+  <UserItemProvider />
 </template>

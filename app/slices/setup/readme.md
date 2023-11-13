@@ -26,7 +26,7 @@ export default defineNuxtConfig({
 run in terminal
 
 ```bash
-npm i tsyringe reflect-metadata tslib`
+npm i tsyringe reflect-metadata tslib nitropack`
 npm i -D @rollup/plugin-typescript
 ```
 
@@ -142,4 +142,63 @@ export default defineNuxtConfig({
     ],
   },
 });
+```
+
+### How to localize dates
+
+Setup formats:
+
+Create file `i18n.config.ts` in `root/configs` add
+
+```ts
+export default defineI18nConfig(() => ({
+  //...
+  datetimeFormats: {
+    en: {
+      short: {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      },
+      long: {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        weekday: 'short',
+        hour: 'numeric',
+        minute: 'numeric',
+      },
+      time: {
+        hour: '2-digit',
+        minute: 'numeric',
+        hour12: true,
+      },
+    },
+    fr: {
+      //...
+    }
+})
+```
+
+In your components use `$d`
+
+```html
+<div>{{ $d(new Date(item.createdAt), 'short') }}</div>
+```
+
+or
+
+```html
+<i18n-d tag="span" :value="new Date(item.createdAt)" format="long"></i18n-d>
+```
+
+or
+
+Create file `.slices/common/utils/formatDate.ts` to use this method in any part of the app
+
+```ts
+export const formatDate = (date: string) => {
+  const { d } = useI18n();
+  return d(new Date(date), 'short');
+};
 ```

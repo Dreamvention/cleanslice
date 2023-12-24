@@ -14,6 +14,9 @@ export class ApiAxios extends BaseHttpRequest {
     super(config);
     axiosRetry(this.axiosInstance);
 
+    const app = useNuxtApp();
+    app.$axios = this.axiosInstance;
+
     this.axiosInstance.interceptors.response.use(
       (response) => response,
       async (error) => {

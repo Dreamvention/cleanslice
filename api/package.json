@@ -21,23 +21,28 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/api/test/jest-e2e.json",
     "premigrate": "npx prisma-import --force",
-    "migrate": "dotenv -e .env.dev -- npx prisma migrate dev && dotenv -e .env.dev -- npx prisma generate",
-    "preinstall": "../slices/core/nest/preinstall.sh"
+    "migrate": "dotenv -e .env.dev -- npx prisma migrate dev && dotenv -e .env.dev -- npx prisma generate"
   },
   "dependencies": {
+    "@cdktf/provider-aws": "^18.0.4",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^9.0.0",
-    "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-express": "^9.4.3",
     "@nestjs/swagger": "^7.1.13",
     "@prisma/client": "^5.4.2",
+    "@types/archiver": "^6.0.1",
+    "@vendia/serverless-express": "^4.10.4",
+    "archiver": "^6.0.1",
+    "cdktf": "^0.19.1",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "constructs": "^10.3.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
     "dotenv-cli": "^7.3.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0",
-    "slices-users-api": "file:../slices/users/api"
+    "rxjs": "^7.2.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

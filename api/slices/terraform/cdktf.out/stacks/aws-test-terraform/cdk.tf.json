@@ -1,0 +1,221 @@
+{
+  "//": {
+    "metadata": {
+      "backend": "local",
+      "stackName": "aws-test-terraform",
+      "version": "0.19.1"
+    },
+    "outputs": {
+      "aws-test-terraform": {
+        "lambda_arn": "lambda_arn"
+      }
+    }
+  },
+  "data": {
+    "aws_iam_policy_document": {
+      "assume_role": {
+        "//": {
+          "metadata": {
+            "path": "aws-test-terraform/assume_role",
+            "uniqueId": "assume_role"
+          }
+        },
+        "statement": [
+          {
+            "actions": [
+              "sts:AssumeRole"
+            ],
+            "effect": "Allow",
+            "principals": [
+              {
+                "identifiers": [
+                  "lambda.amazonaws.com"
+                ],
+                "type": "Service"
+              }
+            ]
+          }
+        ]
+      },
+      "lambda-policy": {
+        "//": {
+          "metadata": {
+            "path": "aws-test-terraform/lambda-policy",
+            "uniqueId": "lambda-policy"
+          }
+        },
+        "statement": [
+          {
+            "actions": [
+              "s3:*"
+            ],
+            "effect": "Allow",
+            "resources": [
+              "*"
+            ]
+          },
+          {
+            "actions": [
+              "ec2:DescribeNetworkInterfaces",
+              "ec2:CreateNetworkInterface",
+              "ec2:DeleteNetworkInterface",
+              "ec2:DescribeInstances",
+              "ec2:AttachNetworkInterface"
+            ],
+            "effect": "Allow",
+            "resources": [
+              "*"
+            ]
+          },
+          {
+            "actions": [
+              "cognito-idp:*"
+            ],
+            "effect": "Allow",
+            "resources": [
+              "*"
+            ]
+          },
+          {
+            "actions": [
+              "lambda:*"
+            ],
+            "effect": "Allow",
+            "resources": [
+              "*"
+            ]
+          },
+          {
+            "actions": [
+              "dynamodb:DescribeTable",
+              "dynamodb:Query",
+              "dynamodb:Scan",
+              "dynamodb:GetItem",
+              "dynamodb:PutItem",
+              "dynamodb:UpdateItem",
+              "dynamodb:DeleteItem",
+              "dynamodb:CreateTable"
+            ],
+            "effect": "Allow",
+            "resources": [
+              "*"
+            ]
+          },
+          {
+            "actions": [
+              "rds:*",
+              "s3:*"
+            ],
+            "effect": "Allow",
+            "resources": [
+              "arn:aws:rds:*:*:db:*",
+              "arn:aws:rds:*:*:cluster:*",
+              "arn:aws:rds-db:*:*:dbuser:*/*"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "output": {
+    "lambda_arn": {
+      "value": "${aws_lambda_function.lambda.arn}"
+    }
+  },
+  "provider": {
+    "aws": [
+      {
+        "region": "us-east-1"
+      }
+    ]
+  },
+  "resource": {
+    "aws_iam_policy": {
+      "iam-lambda-policy": {
+        "//": {
+          "metadata": {
+            "path": "aws-test-terraform/iam-lambda-policy",
+            "uniqueId": "iam-lambda-policy"
+          }
+        },
+        "name": "api-prod-iam-lambda-policy",
+        "path": "/",
+        "policy": "${data.aws_iam_policy_document.lambda-policy.json}"
+      }
+    },
+    "aws_iam_role": {
+      "iam-for-lambda": {
+        "//": {
+          "metadata": {
+            "path": "aws-test-terraform/iam-for-lambda",
+            "uniqueId": "iam-for-lambda"
+          }
+        },
+        "assume_role_policy": "${data.aws_iam_policy_document.assume_role.json}",
+        "managed_policy_arns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          "${aws_iam_policy.iam-lambda-policy.arn}"
+        ],
+        "name": "api-prod-function-role"
+      }
+    },
+    "aws_lambda_function": {
+      "lambda": {
+        "//": {
+          "metadata": {
+            "path": "aws-test-terraform/lambda",
+            "uniqueId": "lambda"
+          }
+        },
+        "environment": {
+          "variables": {
+            "DATABASE_URL": "file:./dev.db"
+          }
+        },
+        "function_name": "api-prod-function-main",
+        "handler": "dist/src/lambda.handler",
+        "role": "${aws_iam_role.iam-for-lambda.arn}",
+        "runtime": "nodejs18.x",
+        "s3_bucket": "${aws_s3_bucket.bucket.bucket}",
+        "s3_key": "${aws_s3_object.lambda-archive.key}"
+      }
+    },
+    "aws_s3_bucket": {
+      "bucket": {
+        "//": {
+          "metadata": {
+            "path": "aws-test-terraform/bucket",
+            "uniqueId": "bucket"
+          }
+        },
+        "bucket_prefix": "api-prod-lambda-arhive"
+      }
+    },
+    "aws_s3_object": {
+      "lambda-archive": {
+        "//": {
+          "metadata": {
+            "path": "aws-test-terraform/lambda-archive",
+            "uniqueId": "lambda-archive"
+          }
+        },
+        "bucket": "${aws_s3_bucket.bucket.bucket}",
+        "key": "archive.zip",
+        "source": "assets/lambda-asset/BBFF68521E1973C45EDCF9716E46A8A7/archive.zip"
+      }
+    }
+  },
+  "terraform": {
+    "backend": {
+      "local": {
+        "path": "/Users/alexkrasny/Workspace/javascript/cleanslice/api/slices/terraform/terraform.aws-test-terraform.tfstate"
+      }
+    },
+    "required_providers": {
+      "aws": {
+        "source": "aws",
+        "version": "5.24.0"
+      }
+    }
+  }
+}

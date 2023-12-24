@@ -100,4 +100,16 @@ export class UsersService {
         });
     }
 
+    /**
+     * Returns currently logged in user
+     * @returns UserDto
+     * @throws ApiError
+     */
+    public getLoggedInUser(): CancelablePromise<UserDto> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/users/me',
+        });
+    }
+
 }

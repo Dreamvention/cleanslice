@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ApiRepository, UserDto, UpdateUserDto } from '@/data/repositories';
+import { ApiRepository, UserDto } from '@/data/repositories';
 import { pages } from '@/pages';
 const app = useNuxtApp();
 const route = useRoute();

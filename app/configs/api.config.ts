@@ -1,5 +1,5 @@
 export const apiConfig = {
-  BASE: 'http://localhost:3333',
+  BASE: process.env.API_URL ?? 'http://localhost:3333',
   VERSION: '1.0',
   WITH_CREDENTIALS: true,
   CREDENTIALS: 'include',

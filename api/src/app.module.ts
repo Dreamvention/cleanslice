@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PrismaModule } from './prisma/prisma.module';
 import { SlicesModule } from '../registerSlices';
 
 @Module({
@@ -9,7 +8,6 @@ import { SlicesModule } from '../registerSlices';
       isGlobal: true,
       envFilePath: '.env.dev',
     }),
-    PrismaModule,
     SlicesModule.registerAsync(),
   ],
 })

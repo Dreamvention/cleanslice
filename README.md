@@ -15,6 +15,7 @@ Clean Slice is an Opinionated framework that is built on the tech-stack:
 
 - Typescript, Scss
 - Vite
+- Vuejs
 - Nuxtjs
 - Vuetify
 

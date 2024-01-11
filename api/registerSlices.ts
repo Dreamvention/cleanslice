@@ -8,9 +8,11 @@ export class SlicesModule {
     const result = [];
 
     for (const slice of slices) {
-      const className = `${slice.charAt(0).toUpperCase() + slice.slice(1)}Module`;
-      const module = await import(`./src/slices/${slice}/${slice}.module`);
-      result.push(module[className]);
+      if (fs.existsSync(`./slices/${slice}/${slice}.module.ts`)) {
+        const className = `${slice.charAt(0).toUpperCase() + slice.slice(1)}Module`;
+        const module = await import(`./src/slices/${slice}/${slice}.module`);
+        result.push(module[className]);
+      }
     }
 
     return {

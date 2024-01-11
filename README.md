@@ -1,83 +1,90 @@
-# Setup APP
+# Prime Slice
 
-- install nuxt `npx nuxi@latest init` and name it `app`
-- install pinia `npm install pinia @pinia/nuxt`
+The Slice Architecture for Coso Learning manager projects.
 
-```ts
-// nuxt.config.js
-export default defineNuxtConfig({
-  // ... other options
-  modules: [
-    // ...
-    "@pinia/nuxt",
-  ],
-});
-```
+### Contents
 
-- install vuetify `npm install --save-dev @invictus.codes/nuxt-vuetify`
+1. [App](./app/README.md)
+2. [Api](./api/README.md)
 
-```ts
-export default defineNuxtConfig({
-  modules: ["@invictus.codes/nuxt-vuetify"],
-  vuetify: {
-    /* vuetify options */
-    vuetifyOptions: {
-      // @TODO: list all vuetify options
-    },
-    moduleOptions: {
-      /* nuxt-vuetify module options */
-      treeshaking: true | false,
-      useIconCDN: true | false,
-      /* vite-plugin-vuetify options */
-      styles: true | "none" | "expose" | "sass" | { configFile: string },
-      autoImport: true | false,
-      useVuetifyLabs: true | false,
-    },
-  },
-});
-```
+### Tech stack
 
-- install scss `npm install sass`
+Clean Slice is an Opinionated framework that is built on the tech-stack:
 
-```ts
-export default defineNuxtConfig({
-  //...
-  css: ["~/assets/scss/main.scss"],
-  vite: {
-    //...
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@use "@/assets/scss/main.scss" as *;',
-        },
-      },
-    },
-  },
-});
-```
+#### The Frontend
 
-- run `nest new api`
-- run `npm install --save @nestjs/swagger`
-- create folder `core` in root
+- Typescript, Scss
+- Vite
+- Nuxtjs
+- Vuetify
 
-# Setup API
+#### The Backend:
 
-# Setup Prisma (Database)
+- Nodejs, Typescript
+- Nestjs
+- OpenApi (Swagger, CodeGen)
+- Prisma (DB ORM)
+- PostgreSQL (DB)
 
-# File structure
+#### Hosting
 
-# Beaufactor
+- AWS
+- CloudFormation (in CDK ts)
 
-- Do:
+#### Mobile app
 
-```js
-const [password, salt] = user.password.split(".");
-```
+- Capacitor
 
-- Don't:
+#### Testing
 
-```js
-const parts = user.password.split(".");
-password = parts[0];
-salt = parts[1];
-```
+- vitest
+- cucumber
+- selenium
+- cypress
+
+## Core philosophy
+
+![Slice Architecture](./docs/image-tutorial-slice-architecture.png)
+
+- Screaming architecture
+- Abstract when necessary
+- Write reusable code
+- Test more, debug less
+
+Slice Architecture is the next step in Clean Architecture evolution. A slice is a feature limited to a folder inside the application.
+
+# Theory
+
+## Screaming architecture
+
+"Screaming Architecture" is a term coined by Robert C. Martin, also known as Uncle Bob. The concept of Screaming Architecture is that the structure of a software application should clearly reflect its primary purpose and domain. When someone looks at the high-level structure of its source code, the purpose of the application should be immediately evident – it should “scream” its intent.
+
+## Abstract when necessary
+
+The "Abstract When Necessary" pattern is a software development principle that advises developers to introduce abstractions in their code only when it is necessary and justified, rather than prematurely. This principle is aligned with the broader philosophy of keeping code simple and maintainable, such as YAGNI Principle and Refactoring to Abstraction.
+
+There are three recommended examples of structuring your app slice code.
+
+1. [Repository (simple)](./app/slices/users/readme.md)
+2. [Gateway](./app/slices/users-gateway/readme.md)
+3. [Service](./app/slices/users-service/readme.md)
+
+### Which pattern to start with?
+
+Start by implementing the simple pattern if you are also developing the API. You can rapidly prototype your application without having to write lots of abstractions and can take advantage of the OpenAPI CodeGen feature ([Api slice](./slices/api/readme.md))
+
+If you are not in control of the API, you can start with the Gateway pattern. This allows you to add a layer of abstraction on top of a Repository, that is often a third-party SDK.
+
+## Write reusable code
+
+The core principle of the Clean Slice Architecture is reusable features aka Slices. A slice is a loosely coupled implementation of a feature. It has its own readme and can only reference other slices through the slice key #sliceName.
+
+This way a slice is independent and can be moved, shared or deleted without effecting the overall app. This approach allows the application to move away from being a monolithic app and become a feature-driven application.
+
+## Test more, debug less
+
+Testing is a big part of the Clean Slice Architecture. Ever Project has a test folder that sets ups a testing environment for:
+
+- Unit testing (vitest)
+- Integration testing (vitest, api mocks)
+- End-to-end testing (cucumber, selenium, cypress)

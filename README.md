@@ -11,14 +11,14 @@ The Slice Architecture for Coso Learning manager projects.
 
 Clean Slice is an Opinionated framework that is built on the tech-stack:
 
-#### The Frontend
+#### Frontend
 
 - Typescript, Scss
 - Vite
 - Nuxtjs
 - Vuetify
 
-#### The Backend:
+#### Backend:
 
 - Nodejs, Typescript
 - Nestjs

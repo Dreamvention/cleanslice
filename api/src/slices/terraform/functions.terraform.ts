@@ -11,7 +11,7 @@ export class Lambda {
   public static init(scope: Construct, role: IamRole) {
     // Create unique S3 bucket that hosts Lambda executable
     const asset = new TerraformAsset(scope, 'lambda-asset', {
-      path: path.resolve(__dirname, '../../dist/'),
+      path: path.resolve(__dirname, '../../../dist/'),
       type: AssetType.ARCHIVE,
     });
     const bucket = new S3Bucket(scope, 'bucket', {

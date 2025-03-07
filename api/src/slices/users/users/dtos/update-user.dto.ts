@@ -1,8 +1,9 @@
-import { IUserData } from '../domain/entities';
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsNotEmpty, IsOptional, IsArray } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IUpdateUserData } from '../domain';
+import { RoleTypes } from '#users/users';
 
-export class UpdateUserDto implements IUserData {
+export class UpdateUserDto implements IUpdateUserData {
   @ApiPropertyOptional()
   @IsString()
   @IsNotEmpty()
@@ -15,8 +16,9 @@ export class UpdateUserDto implements IUserData {
   @IsOptional()
   public email: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+  @ApiProperty({ enum: RoleTypes, enumName: 'Role', isArray: true })
+  @IsArray()
   @IsOptional()
-  public password?: string;
+  @IsNotEmpty()
+  public roles: RoleTypes[];
 }

@@ -1,0 +1,109 @@
+version: '3.8'
+name: cleanslice-api
+services:
+  dynamodb-local:
+    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath ./data'
+    image: 'amazon/dynamodb-local:latest'
+    ports:
+      - '8000:8000'
+    volumes:
+      - './docker/dynamodb:/home/dynamodblocal/data'
+    working_dir: /home/dynamodblocal
+  s3-local:
+    image: 'luofuxiang/local-s3:latest'
+    ports:
+      - 19025:80
+    volumes:
+      - ./docker/s3:/data
+    # RUN THIS COMMAND after launching the container for the first time
+    # aws --endpoint-url=http://localhost:19025 s3api create-bucket --bucket cleanslice-api-local-static && aws --endpoint-url=http://localhost:19025 s3api put-bucket-policy --bucket cleanslice-api-local-static --policy file://scripts/s3-local-policy.json
+  postgres-local:
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: cleanslice-api-local-database
+    volumes:
+      - ./docker/postgresql:/var/lib/postgresql/data
+  # unstructured-local:
+  #   image: downloads.unstructured.io/unstructured-io/unstructured-api:latest
+  #   ports:
+  #     - '8800:8000' # Map port 8000 of the container to port 8000 on the host
+  #   environment:
+  #     - UNSTRUCTURED_MEMORY_FREE_MINIMUM_MB=256 # https://github.com/Unstructured-IO/unstructured-api?tab=readme-ov-file#controlling-server-load
+  #   # command: ["--port", "8000", "--host", "0.0.0.0"]  # Command to run the container
+  #   # platform: linux/amd64  # Specify the platform, adjust if necessary for your hardware
+  #   # restart: unless-stopped  # Restart the container unless it is explicitly stopped
+  opensearch-local:
+    image: opensearchproject/opensearch:latest
+    environment:
+      - cluster.name=opensearch
+      - node.name=opensearch
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - 'OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m'
+      - 'DISABLE_INSTALL_DEMO_CONFIG=true'
+      - 'DISABLE_SECURITY_PLUGIN=true'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - './docker/opensearch:/usr/share/opensearch/data'
+    ports:
+      - 9200:9200
+      - 9600:9600
+    networks:
+      - opensearch
+  opensearch-dashboards-local:
+    image: opensearchproject/opensearch-dashboards:latest # Make sure the version of opensearch-dashboards matches the version of opensearch installed on other nodes
+    ports:
+      - 5601:5601 # Map host port 5601 to container port 5601
+    expose:
+      - '5601' # Expose port 5601 for web access to OpenSearch Dashboards
+    environment:
+      OPENSEARCH_HOSTS: '["http://opensearch:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: 'true' # disables security dashboards plugin in OpenSearch Dashboards
+    networks:
+      - opensearch
+  # neo4j-local:
+  #   image: neo4j:4.4.35-community
+  #   container_name: neo4j
+  #   ports:
+  #     - 7888:7474 # HTTP
+  #     - 7999:7687 # Bolt
+  #   environment:
+  #     - NEO4J_AUTH=neo4j/test
+  #     - NEO4JLABS_PLUGINS=["apoc","graph-data-science"]
+  #     - NEO4J_dbms_security_procedures_unrestricted=apoc.*,gds.*
+  #     - NEO4J_dbms_memory_pagecache_size=1G
+  #     - NEO4J_dbms_memory_heap_initial__size=512m
+  #     - NEO4J_dbms_memory_heap_max__size=2G
+  #   volumes:
+  #     - './docker/neo4j/data:/data'
+  #     - './docker/neo4j/logs:/logs'
+  #     - './docker/neo4j/conf:/conf'
+  #     - './docker/neo4j/import:/var/lib/neo4j/import'
+  #     - './docker/neo4j/plugins:/plugins'
+  #   restart: unless-stopped
+  # redis-local:
+  #   image: redis:latest
+  #   ports:
+  #     - '6379:6379'
+  # step-functions-local:
+  #   image: amazon/aws-stepfunctions-local
+  #   container_name: step-functions-local
+  #   ports:
+  #     - '8083:8083'
+  #   environment:
+  #     - AWS_REGION=us-east-1
+  #     - AWS_ACCOUNT_ID=123456789012
+  #     - SFN_LOGGING=true
+  #   command: >
+  #     -jar StepFunctionsLocal.jar
+  #     --region us-east-1
+  #     --aws-account 123456789012
+  #     --logging true
+networks:
+  opensearch:

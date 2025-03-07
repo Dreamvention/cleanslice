@@ -1,0 +1,24 @@
+{
+  "welcome": "Welcome to the world of Python",
+
+  "USER_EXISTS_title": "User Already Registered",
+  "USER_EXISTS_description": "It looks like you already have an account. Please log in with your credentials.",
+
+  "USER_NOT_CONFIRMED_title": "Account Not Confirmed",
+  "USER_NOT_CONFIRMED_description": "Your account is not confirmed yet. Please check your email for the confirmation link.",
+
+  "USER_NOT_CREATED_title": "Account Creation Failed",
+  "USER_NOT_CREATED_description": "There was an issue creating your account. Please try again later or contact {supportLink}.",
+
+  "USER_BANNED_title": "Account Banned",
+  "USER_BANNED_description": "Your account has been banned due to violations of our terms. Please contact {supportLink} for further information.",
+
+  "USER_NOT_AUTHORIZED_title": "Incorrect Email or Password",
+  "USER_NOT_AUTHORIZED_description": "It seems that your email or password may be incorrect, or you don’t have permission to access this resource. Please verify your credentials and try again, or contact {supportLink} for assistance.",
+
+  "USER_NOT_VERIFIED_title": "Account Not Verified",
+  "USER_NOT_VERIFIED_description": "Your account has not been verified yet. Please contact us at {supportLink} for assistance with verifying your account.",
+
+  "USER_NOT_EXISTS_title": "Account Not Found",
+  "USER_NOT_EXISTS_description": "We couldn't find an account associated with the provided email address. Please check your email address and try again, or sign up for a new account."
+}

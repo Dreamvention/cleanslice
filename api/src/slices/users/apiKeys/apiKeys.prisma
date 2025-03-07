@@ -1,0 +1,12 @@
+import { Team } from "../teams/teams"
+
+model ApiKey {
+  id         String   @id
+  teamId     String
+  team       Team     @relation(fields: [teamId], references: [id])
+  name       String
+  secret     String   @unique
+  lastUsedAt DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

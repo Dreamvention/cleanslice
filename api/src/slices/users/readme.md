@@ -13,6 +13,6 @@ It is the dependency module for the Auth module.
 
 ### Auth
 
-Manages the registration and loginization of new Users.
+Manages the registration and login of new Users.
 
 It depends on the User module.

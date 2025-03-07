@@ -1,0 +1,13 @@
+// prisma/schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider         = "prisma-client-js"
+  previewFeatures  = ["views"]
+  binaryTargets    = ["native", "darwin-arm64", "rhel-openssl-3.0.x"]
+  connect_timeout  = 10
+  connection_limit = 20
+}

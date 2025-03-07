@@ -6,9 +6,13 @@ import Cookies from 'js-cookie';
  */
 export const handleApiAuthentication = (token?: string) => {
   if (token) {
-    Cookies.set('API_TOKEN', token, { expires: 30, secure: true });
+    Cookies.set(process.env.API_TOKEN || 'API_TOKEN', token, {
+      expires: 30,
+      secure: process.env.NODE_ENV !== 'development',
+      domain: process.env.NODE_ENV === 'development' ? 'localhost' : undefined,
+    });
   } else {
     //Logout API
-    Cookies.remove(process.env.API_TOKEN || 'TOKEN');
+    Cookies.remove(process.env.API_TOKEN || 'API_TOKEN');
   }
 };

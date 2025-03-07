@@ -1,11 +1,18 @@
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const currentDir = dirname(fileURLToPath(import.meta.url));
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import type { Nitro } from 'nitropack';
-import typescript from '@rollup/plugin-typescript';
 export default defineNuxtConfig({
+  ssr: false,
   modules: ['@nuxtjs/i18n', '@pinia/nuxt'],
+  alias: {
+    '#setup': currentDir,
+  },
   imports: {
     // Required for pinia
-    dirs: ['../../stores', '../../slices/*/stores'],
+    dirs: ['../../stores', '../../slices/**/stores'],
   },
   hooks: {
     // Required for DI
@@ -14,19 +21,23 @@ export default defineNuxtConfig({
     },
   },
   vite: {
-    // Required for DI
-    plugins: [typescript()],
-  },
-  build: {
-    // Required for DI
-    transpile: ['tslib'],
+    esbuild: {
+      tsconfigRaw: {
+        compilerOptions: {
+          experimentalDecorators: true,
+        },
+      },
+    },
   },
   i18n: {
     // Required for i18n
-    vueI18n: './configs/i18n.config.ts',
+    vueI18n: 'i18n.config.ts',
     // read more https://i18n.nuxtjs.org/options/vue-i18n
     strategy: 'no_prefix',
     defaultLocale: 'en',
+    compilation: {
+      strictMessage: false,
+    },
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',

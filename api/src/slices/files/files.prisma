@@ -1,0 +1,12 @@
+import { Team } from "../users/teams/teams"
+
+model File {
+  id          String   @id
+  teamId      String
+  team        Team     @relation(fields: [teamId], references: [id])
+  name        String
+  contentType String
+  path        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

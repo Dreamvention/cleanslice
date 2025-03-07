@@ -58,7 +58,7 @@ There are three examples of structuring your app slice code.
 The Repository (simple) architecture pattern demonstrates how you can fetch data using only the `ApiRepository`. You can rely on the repository DTOs and use them as interfaces for your components. You don't need to create extra abstractions with Entities, Gateways, Mappers and Services.
 
 ```ts
-import { ApiRepository } from '@/data/repositories';
+import { ApiRepository } from '#api';
 const app = useNuxtApp();
 
 // This is the simplest pattern of fetching and providing data.

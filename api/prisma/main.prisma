@@ -1,9 +1,0 @@
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["rhel-openssl-1.0.x", "native", "darwin-arm64"]
-}

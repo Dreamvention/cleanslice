@@ -1,8 +1,8 @@
-import { IAuthData } from '../domain';
 import { ApiProperty } from '@nestjs/swagger';
+import { IAuthData } from '../domain';
 export class AuthDto implements IAuthData {
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   accessToken: string;

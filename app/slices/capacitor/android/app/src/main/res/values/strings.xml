@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">cleanslice-app-mobile</string>
-    <string name="title_activity_main">cleanslice-app-mobile</string>
-    <string name="package_name">com.cleanslice.app</string>
-    <string name="custom_url_scheme">com.cleanslice.app</string>
-</resources>

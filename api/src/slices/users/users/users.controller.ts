@@ -1,32 +1,34 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req } from '@nestjs/common';
-
-import { IUsersGateway } from './domain/gateways';
-import { IUserData } from './domain/entities';
-import { CreateUserDto, UpdateUserDto, UserDto } from './dtos';
-import { ApiTags, ApiOperation, ApiOkResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
-import { AuthGuard, IRequestWithAuth } from '../auth/auth.guard';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiOkResponse, ApiBody } from '@nestjs/swagger';
+import { IUsersGateway,  IUserData } from './domain';
+import { CreateUserDto, UpdateUserDto, UserDto, FilterUserDto } from './dtos';
+import { ApiSingleResponse, ApiPaginatedResponse, IMetaResponse } from '#core';
+import { Roles } from '#users/auth/roles.decorator';
+import { RoleTypes } from '#users/users';
 @ApiTags('users')
-@UseGuards(AuthGuard)
+//TODO: user can update himself... maybe move this to auth.
+// @Roles(RoleTypes.Admin)
 @Controller('users')
 export class UsersController {
   constructor(private usersGateway: IUsersGateway) {}
 
   @ApiOperation({ description: 'List all users', operationId: 'getUsers' })
-  @ApiOkResponse({ type: [UserDto] })
+  @ApiPaginatedResponse(UserDto)
   @Get()
-  async getUsers(): Promise<IUserData[]> {
-    return await this.usersGateway.getUsers();
+  async getUsers(@Query() query: FilterUserDto): Promise<{ data: IUserData[]; meta: IMetaResponse }> {
+    return await this.usersGateway.getUsers(query);
   }
 
   @ApiOperation({ description: 'Get a user', operationId: 'getUser' })
-  @ApiOkResponse({ type: UserDto })
+  @ApiSingleResponse(UserDto)
   @Get(':id')
   async getUser(@Param('id') id: string): Promise<IUserData> {
-    return await this.usersGateway.getUser(parseInt(id));
+    return await this.usersGateway.getUser(id);
   }
 
   @ApiOperation({ description: 'Create a new user', operationId: 'createUser' })
   @ApiBody({ type: CreateUserDto })
+  @ApiSingleResponse(UserDto)
   @Post()
   async createUser(@Body() data: CreateUserDto): Promise<IUserData> {
     return await this.usersGateway.createUser(data);
@@ -34,23 +36,15 @@ export class UsersController {
 
   @ApiOperation({ description: 'Update a user', operationId: 'updateUser' })
   @ApiBody({ type: UpdateUserDto })
+  @ApiSingleResponse(UserDto)
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() data: UpdateUserDto): Promise<IUserData> {
-    return await this.usersGateway.updateUser(parseInt(id), data);
+    return await this.usersGateway.updateUser(id, data);
   }
 
   @ApiOperation({ description: 'Delete a user', operationId: 'deleteUser' })
   @Delete(':id')
   async deleteUser(@Param('id') id: string): Promise<boolean> {
-    return await this.usersGateway.deleteUser(parseInt(id));
-  }
-
-  @ApiOperation({ description: 'Returns currently logged in user', operationId: 'getLoggedInUser' })
-  @ApiOkResponse({ type: UserDto })
-  @ApiBearerAuth('access-token')
-  @Get('/me')
-  async getLoggedInUser(@Req() request: IRequestWithAuth): Promise<IUserData> {
-    console.log(request);
-    return await this.usersGateway.getUser(request.user?.id);
+    return await this.usersGateway.deleteUser(id);
   }
 }

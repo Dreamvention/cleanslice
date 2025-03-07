@@ -1,27 +1,41 @@
-<template>
-  <v-navigation-drawer :rail="rail" @click="rail = false">
-    <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg" title="John Leider">
-      <template v-slot:append>
-        <v-btn variant="text" icon="mdi-chevron-left" @click.stop="rail = !rail"></v-btn>
-      </template>
-    </v-list-item>
+<script setup lang="ts">
+import { MenuGroupTypes } from '#common/stores/menu';
+const menu = useMenuStore();
+const route = useRoute();
 
-    <v-divider></v-divider>
+const getSidebarByGroup = (group: MenuGroupTypes) => {
+  const items = menu.getSidebar;
+  return items.filter((item) => item.group == group);
+};
 
-    <v-list density="compact" nav>
-      <v-list-item
-        v-for="item in menu.getItems"
-        :key="item.id"
-        :active="item.active"
-        :to="{ name: item.link }"
-        :title="item.title"
-        :prepend-icon="item.icon"
-      ></v-list-item>
-    </v-list>
-  </v-navigation-drawer>
-</template>
-<script lang="ts" setup>
-const menu = useMenu();
-
-const rail = ref(true);
+console.log(route.params.teamId);
 </script>
+
+<template>
+  <div
+    v-for="group in [
+      MenuGroupTypes.Project,
+      MenuGroupTypes.Playground,
+      MenuGroupTypes.Account,
+      MenuGroupTypes.Resources,
+    ]"
+    class="mb-4"
+  >
+    <h4 class="mb-1 rounded-md px-2 py-1 text-xs font-semibold uppercase tracking-wider text-slate-400">{{ group }}</h4>
+
+    <div class="grid grid-flow-row auto-rows-max text-sm">
+      <nuxt-link
+        v-for="item in getSidebarByGroup(group)"
+        :key="item.id"
+        :to="{ name: item.link, params: { teamId: route.params.teamId } }"
+        class="group flex w-full items-center rounded-md border border-transparent px-2 py-1 text-muted-foreground"
+        :class="{ '!font-semibold !text-foreground': item.active }"
+        aria-current="page"
+      >
+        <Icon :name="item.icon" class="mr-2" :class="{ 'animate-pulse text-orange-400': item.isPolling }" />
+        {{ $t(item.title) }}
+        <!-- <Icon name="Radio" color="green" class="ml-2 animate-pulse" /> -->
+      </nuxt-link>
+    </div>
+  </div>
+</template>

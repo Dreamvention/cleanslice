@@ -1,8 +1,9 @@
-import { IUserData } from '../domain/entities';
 import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { ICreateUserData } from '../domain';
+import { RoleTypes } from '#users/users';
 
-export class CreateUserDto implements IUserData {
+export class CreateUserDto implements ICreateUserData {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -13,8 +14,6 @@ export class CreateUserDto implements IUserData {
   @IsNotEmpty()
   public email: string;
 
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  public password: string;
+  @ApiProperty({ enum: RoleTypes, isArray: true })
+  public roles: RoleTypes[];
 }

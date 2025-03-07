@@ -1,3 +1,0 @@
-<template>
-  <UserItemProvider />
-</template>

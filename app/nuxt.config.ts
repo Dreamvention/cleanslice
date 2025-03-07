@@ -4,8 +4,9 @@ import { registerSlices } from './registerSlices';
 // import loadLanguages from './loadLanguages';
 
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   extends: [...registerSlices()],
+
   vite: {
     define: {
       'process.env': process.env,
@@ -14,4 +15,7 @@ export default defineNuxtConfig({
       __INTLIFY_PROD_DEVTOOLS__: false,
     },
   },
+
+  modules: ['@nuxt/image'],
+  compatibilityDate: '2024-10-04',
 });

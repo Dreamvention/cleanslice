@@ -1,8 +1,10 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { IUserData } from '../../users/domain';
+import { ICreateAuthData } from '../domain';
+import { RoleTypes, ICreateUserData } from '#users/users';
 
-export class RegisterUserDto implements IUserData {
+export class RegisterUserDto implements ICreateAuthData, ICreateUserData {
+  public roles: RoleTypes[];
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

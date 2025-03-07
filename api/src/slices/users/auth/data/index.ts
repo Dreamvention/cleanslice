@@ -1,1 +1,1 @@
-export * from './gateways';
+export * from './auth.gateway';

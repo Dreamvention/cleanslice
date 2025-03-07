@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
-import { IUsersGateway } from './domain/gateways';
-import { UsersGateway } from './data/gateways';
-import { PrismaModule } from 'src/slices/prisma/prisma.module';
-import { UserMapper } from './data/mappers';
+import { IUsersGateway, UsersService } from './domain';
+import { UsersGateway, UserMapper } from './data';
+import { ApiKeysModule } from '../apiKeys/apiKeys.module';
+import { PrismaModule } from '#prisma';
 
 @Module({
   imports: [PrismaModule],
-  providers: [{ provide: IUsersGateway, useClass: UsersGateway }, UserMapper],
+  providers: [{ provide: IUsersGateway, useClass: UsersGateway }, UserMapper, UsersService],
   controllers: [UsersController],
-  exports: [{ provide: IUsersGateway, useClass: UsersGateway }],
+  exports: [{ provide: IUsersGateway, useClass: UsersGateway }, UserMapper, UsersService],
 })
 export class UsersModule {}

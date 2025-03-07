@@ -5,7 +5,7 @@
 Run in terminal
 
 ```bash
-npm i -D @nuxt/test-utils @vue/test-utils @vitejs/plugin-vue @vitest/ui resize-observer-polyfill jsdom vitest
+npm i -D  @nuxt/test-utils vitest @vue/test-utils @vitest/ui happy-dom playwright-core resize-observer-polyfill jsdom
 npm i -D  msw
 ```
 

@@ -3,6 +3,9 @@
   "collection": "@nestjs/schematics",
   "entryFile": "lambda",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+
+    "assets": ["**/*.key"],
+    "watchAssets": true
   }
 }

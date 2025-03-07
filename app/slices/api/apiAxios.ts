@@ -22,6 +22,8 @@ export class ApiAxios extends BaseHttpRequest {
       async (error) => {
         // Create handleError utils method in slices/common/utils
         handleError(error);
+        createError({ statusCode: 404, message: 'Data not found' });
+        return Promise.resolve();
       },
     );
   }

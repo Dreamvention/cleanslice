@@ -1,2 +1,2 @@
-export * from './gateways';
-export * from './mappers';
+export * from './users.gateway';
+export * from './user.mapper';

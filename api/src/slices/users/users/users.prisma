@@ -1,0 +1,18 @@
+import { Team, TeamUser } from "../teams/teams"
+
+model User {
+  id                    String   @id
+  name                  String
+  email                 String
+  emailError            Boolean? @default(false)
+  emailErrorDescription String?  @default("")
+  emailNotifications    Boolean? @default(true)
+  roles                 String[] @default([])
+  verified              Boolean  @default(false)
+  banned                Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  teams     Team[]
+  teamUsers TeamUser[]
+}

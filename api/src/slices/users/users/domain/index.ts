@@ -1,2 +1,3 @@
-export * from './entities';
-export * from './gateways';
+export * from './user.types';
+export * from './users.gateway';
+export * from './users.service';

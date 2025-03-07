@@ -4,6 +4,7 @@ Dependencies:
 
 - setup
 - account (for authentication)
+- https://heyapi.vercel.app/
 
 ### Install Cookie (for Authentication)
 
@@ -23,17 +24,34 @@ read more https://github.com/ferdikoomen/openapi-typescript-codegen/blob/master/
 Be sure to read this article on NEST js @API https://docs.nestjs.com/openapi/operations
 Run in terminal
 
-run `npm i -D openapi-typescript-codegen`
+run `npm i -D @hey-api/openapi-ts`
 
 Add to `package.json`
 
 ```json
 {
   "scripts": {
-    "build:api": "sh ./slices/api/build.sh",
+    "build:api": "openapi-ts",
     "dev": "npm run build:api && nuxt dev"
   }
 }
+```
+
+Add file to root `./openapi-ts.config.ts`
+
+```ts
+import { defineConfig } from '@hey-api/openapi-ts';
+
+export default defineConfig({
+  client: 'axios',
+  name: 'ApiClient',
+  format: 'prettier',
+  input: '../api/swagger-spec.json',
+  output: './slices/api/data/repositories/api',
+  types: {
+    enums: 'javascript',
+  },
+});
 ```
 
 Add file `./data/repositories/api/api.repository.ts`
@@ -85,27 +103,13 @@ Create file `.env` and add
 
 ```bash
 #API slice vars
-API_TOKEN=API_TOKEN
 API_URL=http://localhost:3333
 ```
 
 ### How to use API in slices
 
-In other slices to use `@/data/repository/api` copy the following 2 files
-
-- `data/repositories/api.ts`
+In other slices to use `@/api` copy the following 2 files
 
 ```ts
-/** This is a proxy Api Repository
- *  Install @slices/api
- */
-
-export * from '@/slices/api/data/repositories/api/api.repository';
-export * from '@/slices/api/data/repositories/api';
-```
-
-- `data/repositories/index.ts`
-
-```ts
-export * from './api';
+export { ApiRepository } from '@/api';
 ```

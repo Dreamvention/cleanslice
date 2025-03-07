@@ -1,3 +1,10 @@
+<script lang="ts" setup>
+definePageMeta({
+  layout: 'home',
+  public: true,
+});
+</script>
+
 <template>
-  <div>{{ $t('welcome') }}</div>
+  <HomeProvider />
 </template>

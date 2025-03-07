@@ -23,15 +23,17 @@ async function bootstrap() {
     }),
   );
 
-  //Allows access to files on S3 bucket through a proxy middleware. Set CORS_ENDPOINT
-  app.use(
-    '/cors-proxy',
-    createProxyMiddleware({
-      target: process.env.S3_ENDPOINT, // target host with the same base path
-      changeOrigin: true, // needed for virtual hosted sites
-      pathRewrite: { '^/cors-proxy': '' },
-    }),
-  );
+  if (!!process.env.S3_ENDPOINT) {
+    //Allows access to files on S3 bucket through a proxy middleware. Set CORS_ENDPOINT
+    app.use(
+      '/cors-proxy',
+      createProxyMiddleware({
+        target: process.env.S3_ENDPOINT, // target host with the same base path
+        changeOrigin: true, // needed for virtual hosted sites
+        pathRewrite: { '^/cors-proxy': '' },
+      }),
+    );
+  }
   app.useGlobalInterceptors(new ResponseInterceptor(app.get(Reflector)));
 
   const config = new DocumentBuilder()
@@ -66,6 +68,6 @@ async function bootstrap() {
   });
   // Important! Create a swagger spec file for Code Generator, which is used in the frontend.
   fs.writeFileSync('swagger-spec.json', JSON.stringify(document));
-  await app.listen(3333);
+  await app.listen(process.env.PORT ?? 3333);
 }
 bootstrap();

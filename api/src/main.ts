@@ -8,6 +8,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import * as fs from 'fs';
 
 async function bootstrap() {
+  console.log('HI');
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
@@ -68,6 +69,8 @@ async function bootstrap() {
   });
   // Important! Create a swagger spec file for Code Generator, which is used in the frontend.
   fs.writeFileSync('swagger-spec.json', JSON.stringify(document));
+
+  console.log(process.env.PORT ?? 3333);
   await app.listen(process.env.PORT ?? 3333);
 }
 bootstrap();

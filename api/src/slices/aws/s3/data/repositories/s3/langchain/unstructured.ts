@@ -6,7 +6,8 @@ import { StringWithAutocomplete } from '@langchain/core/utils/types';
 import { DirectoryLoader, UnknownHandling, LoadersMapping } from 'langchain/document_loaders/fs/directory';
 import { BaseDocumentLoader } from 'langchain/document_loaders/base';
 import { UnstructuredClient } from 'unstructured-client';
-import { PartitionResponse } from 'unstructured-client/dist/sdk/models/operations';
+import { PartitionResponse } from 'unstructured-client/sdk/models/operations';
+import { Strategy } from 'unstructured-client/sdk/models/shared';
 
 const UNSTRUCTURED_API_FILETYPES = [
   '.txt',
@@ -254,17 +255,19 @@ export class UnstructuredLoader extends BaseDocumentLoader {
     // const data = fs.readFileSync(filename);
     return client.general
       .partition({
-        // Note that this currently only supports a single file
-        files: {
-          content: data,
-          fileName: filename,
+        partitionParameters: {
+          // Note that this currently only supports a single file
+          files: {
+            content: data,
+            fileName: filename,
+          },
+          // Other partition params
+          strategy: Strategy.HiRes,
+          chunkingStrategy: 'by_title',
+          combineUnderNChars: 1200,
+          maxCharacters: 2000,
+          newAfterNChars: 2000,
         },
-        // Other partition params
-        strategy: 'hi_res',
-        chunkingStrategy: 'by_title',
-        combineUnderNChars: 1200,
-        maxCharacters: 2000,
-        newAfterNChars: 2000,
       })
       .then((res: PartitionResponse) => {
         if (res.statusCode == 200) {

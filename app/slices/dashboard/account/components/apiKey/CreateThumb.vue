@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ApiRepository, CreateApiKeyDto } from '#api';
+import { ApiKeysService, CreateApiKeyDto } from '#api';
 
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
@@ -33,7 +33,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       name: values.name,
     } as CreateApiKeyDto;
 
-    const result = await app.$di.resolve(ApiRepository).apiKeys.createApiKey({ requestBody });
+    const result = await ApiKeysService.createApiKey({ requestBody });
 
     apiKey.value = result?.data?.secret;
     emits('create', result);

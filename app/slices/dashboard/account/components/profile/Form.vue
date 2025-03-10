@@ -2,7 +2,7 @@
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import * as z from 'zod';
-import { ApiRepository, UpdateUserDto, UserDto } from '#api/data';
+import { UsersService, UpdateUserDto, UserDto } from '#api/data';
 
 const props = defineProps<{
   user: UserDto;
@@ -32,7 +32,7 @@ const submit = form.handleSubmit(async (values) => {
       emailNotifications: values.emailNotifications,
     } as UpdateUserDto;
 
-    const result = await app.$di.resolve(ApiRepository).users.updateUser({ id: props.user.id, requestBody });
+    const result = await UsersService.updateUser({ id: props.user.id, requestBody });
     isOpen.value = false;
     loading.value = false;
     emits('update', result);

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { ApiRepository, UserDto } from '#api/data';
+import { AuthService, UserDto } from '#api/data';
 
 const app = useNuxtApp();
 
-const { data, pending, error, refresh } = useAsyncData('profile', () => app.$di.resolve(ApiRepository).auth.me());
+const { data, pending, error, refresh } = useAsyncData('profile', () => AuthService.me());
 </script>
 
 <template>

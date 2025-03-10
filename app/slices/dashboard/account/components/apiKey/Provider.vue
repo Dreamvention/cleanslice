@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { pages } from '../../pages';
-import { ApiRepository } from '#api';
+import { ApiKeysService } from '#api';
 
 const app = useNuxtApp();
 const route = useRoute();
 
-const { data, pending, error, refresh } = useAsyncData('apiKeys', () =>
-  app.$di.resolve(ApiRepository).apiKeys.getApiKeys(),
-);
+const { data, pending, error, refresh } = useAsyncData('apiKeys', () => ApiKeysService.getApiKeys());
 
 const handleDelete = async (id: string) => {
-  await app.$di.resolve(ApiRepository).apiKeys.deleteApiKey({ id });
+  await ApiKeysService.deleteApiKey({ id });
   refresh();
 };
 

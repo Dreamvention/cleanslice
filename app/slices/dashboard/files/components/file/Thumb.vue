@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ApiRepository, FileDto } from '#api/data';
+import { FilesService, FileDto } from '#api/data';
 import { pages } from '../../pages';
 
 const props = defineProps({
@@ -20,7 +20,7 @@ const app = useNuxtApp();
 const loading = ref(false);
 
 const handleDelete = async (id: string) => {
-  const deletedFile = await app.$di.resolve(ApiRepository).files.deleteFile({ id });
+  const deletedFile = await FilesService.deleteFile({ id });
   emits('delete', id);
 };
 

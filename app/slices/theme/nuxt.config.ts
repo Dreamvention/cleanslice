@@ -18,14 +18,6 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [svgLoader()],
-
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@use "#theme/assets/scss/styles/_media-queries.scss" as *;',
-        },
-      },
-    },
   },
   shadcn: {
     /**

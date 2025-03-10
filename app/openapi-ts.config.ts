@@ -1,15 +1,30 @@
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  client: 'legacy/axios',
   name: 'ApiClient',
-  input:
-    '../api/swagger-spec.json',
+  input: '../api/swagger-spec.json',
+  request: './slices/api/request.ts',
   output: {
     format: 'prettier',
-    path: './slices/api/data/repositories/api'
+    lint: 'eslint',
+    path: './slices/api/data/repositories/api',
   },
-  types: {
-    enums: 'javascript',
-  },
+  plugins: [
+    {
+      name: '@hey-api/client-axios',
+      runtimeConfigPath: './slices/api/api.config.ts',
+    },
+    {
+      enums: 'typescript',
+      name: '@hey-api/typescript',
+    },
+    {
+      name: '@hey-api/schemas',
+      type: 'json',
+    },
+    {
+      name: '@hey-api/sdk',
+      asClass: true,
+    },
+  ],
 });

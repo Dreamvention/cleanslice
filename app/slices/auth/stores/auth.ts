@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ApiRepository, UserDto } from '#api/data';
+import { AuthService, UserDto } from '#api/data';
 import { useCookie } from '#app';
 
 export type IAuthData = {
@@ -36,9 +36,9 @@ export const useAuthStore = defineStore('auth', {
       this.auth = authCookie.value;
       if (this.isAuthenticated) {
         const app = useNuxtApp();
-        const response = await app.$di.resolve(ApiRepository).auth.me();
-        if (response.data) {
-          this.user = response.data;
+        const response = await AuthService.me();
+        if (response.data?.data) {
+          this.user = response.data.data;
         } else {
           this.auth = {} as IAuthData;
         }
@@ -52,14 +52,14 @@ export const useAuthStore = defineStore('auth', {
         this.loading = true;
         const app = useNuxtApp();
         if (this.auth && !!this.auth.refreshToken) {
-          const response = await app.$di.resolve(ApiRepository).auth.refresh({
-            requestBody: {
+          const response = await AuthService.refresh({
+            body: {
               token: this.auth.refreshToken,
             },
           });
 
-          if (response.accessToken) {
-            this.auth.accessToken = response.accessToken;
+          if (response.data?.accessToken) {
+            this.auth.accessToken = response.data.accessToken;
             const authCookie = useCookie(authCookieName);
             authCookie.value = JSON.stringify(this.auth);
             // Cookies.set(authCookieName, JSON.stringify(th
@@ -84,10 +84,9 @@ export const useAuthStore = defineStore('auth', {
       try {
         this.loading = true;
         const app = useNuxtApp();
-        this.auth = await app.$di
-          .resolve(ApiRepository)
-          .auth.login({ requestBody: { email, password, deviceId: 'app' } });
-        if (this.auth.accessToken) {
+        const response = await AuthService.login({ body: { email, password, deviceId: 'app' } });
+        if (response.data?.accessToken) {
+          this.auth = response.data;
           const authCookie = useCookie(authCookieName);
           authCookie.value = JSON.stringify(this.auth);
           // Cookies.set(authCookieName, JSON.stringify(this.auth), {
@@ -107,8 +106,8 @@ export const useAuthStore = defineStore('auth', {
     async register(name: string, email: string, password: string) {
       try {
         const app = useNuxtApp();
-        await app.$di.resolve(ApiRepository).auth.register({
-          requestBody: { name, email, password, deviceId: 'app' },
+        await AuthService.register({
+          body: { name, email, password, deviceId: 'app' },
         });
       } catch (e) {
         console.log(e);
@@ -122,8 +121,8 @@ export const useAuthStore = defineStore('auth', {
 
     async resendConfirm(email: string) {
       const app = useNuxtApp();
-      await app.$di.resolve(ApiRepository).auth.resendConfirm({
-        requestBody: { name: email },
+      await AuthService.resendConfirm({
+        body: { name: email },
       });
     },
   },

@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     '#dashboard': currentDir,
   },
   i18n: {
-    langDir: './locales',
+    langDir: '../locales',
     locales: [{ code: 'en', file: 'en.json' }],
   },
   app: {

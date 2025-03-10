@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ApiRepository, UploadFileDto } from '#api/data';
+import { FilesService, UploadFileDto } from '#api/data';
 import axios from 'axios';
 defineProps<{
   loading?: boolean;
@@ -25,12 +25,12 @@ const handleUpload = async () => {
       file: inputFile.value?.files?.[0],
     } as UploadFileDto;
 
-    const result = await app.$di.resolve(ApiRepository).files.getSignedUrl({
+    const result = await FilesService.getSignedUrl({
       path: inputFile.value?.files?.[0].name ?? '',
       contentType: inputFile.value?.files?.[0].type ?? '',
     });
 
-    await axios.put(result?.data?.url, file.file, {
+    await axios.put(result?.data?.data?.url, file.file, {
       headers: {
         'Content-Type': file.file.type,
       },
@@ -40,14 +40,14 @@ const handleUpload = async () => {
         console.log('percentCompleted', percentCompleted);
       },
     });
-    const uploadedFile = await app.$di.resolve(ApiRepository).files.createFile({
-      requestBody: {
+    const uploadedFile = await FilesService.createFile({
+      body: {
         contentType: file.file.type,
         name: inputFile.value?.files?.[0].name ?? '',
         path: result?.data?.path ?? '',
       },
     });
-    emits('upload', uploadedFile?.data);
+    emits('upload', uploadedFile?.data?.data);
     _loading.value = false;
   } catch (e) {
     console.log(e);

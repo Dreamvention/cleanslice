@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ApiRepository, TeamDto, CreateTeamDto } from '#api';
+import { TeamsService, TeamDto, CreateTeamDto } from '#api';
 import Cookies from 'js-cookie';
 // import { useAuthStore } from '#auth';
 
@@ -47,12 +47,12 @@ export const useTeamsStore = defineStore('teams', {
         const auth = userStore.getAuth;
         this.loading = true;
         const app = useNuxtApp();
-        const response = await app.$di.resolve(ApiRepository).teams.getTeams();
+        const response = await TeamsService.getTeams();
 
-        if (response.data) {
+        if (response.data?.data) {
           console.log('fetchTeams...');
-          this.teams = response.data;
-          this.team = response.data[0];
+          this.teams = response.data.data;
+          this.team = response.data.data[0];
         }
         this.loading = false;
       } catch (error) {
@@ -65,10 +65,10 @@ export const useTeamsStore = defineStore('teams', {
       try {
         this.loading = true;
         const app = useNuxtApp();
-        const response = await app.$di.resolve(ApiRepository).teams.createTeam({ requestBody: data });
-        if (response.data) {
+        const response = await TeamsService.createTeam({ body: data });
+        if (response.data?.data) {
           await this.fetchTeams();
-          this.team = response.data;
+          this.team = response.data.data;
         }
         this.loading = false;
       } catch (e) {

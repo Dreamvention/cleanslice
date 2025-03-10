@@ -1,8 +1,8 @@
-import 'reflect-metadata';
-import { container } from 'tsyringe';
-import { apiConfig } from '../api.config';
+import { client } from '../data/repositories/api/client.gen';
+import Cookies from 'js-cookie';
 
 export default defineNuxtPlugin((nuxtApp) => {
-  container.register('apiConfig', { useValue: apiConfig });
-  nuxtApp.$di = container;
+  client.setConfig({
+    auth: () => Cookies.get('API_TOKEN'),
+  });
 });

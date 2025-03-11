@@ -6,7 +6,7 @@
     "build:aws": "NITRO_PRESET=aws-lambda nuxt build",
     "build:api": "openapi-ts",
     "dev": "npm run build:api && nuxt dev",
-    "generate": "nuxt generate --dotenv .env.prod",
+    "generate": "nuxt generate --dotenv .env",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "test": "vitest --config ./configs/vitest.config.ts",

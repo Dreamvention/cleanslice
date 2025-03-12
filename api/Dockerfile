@@ -17,7 +17,7 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# Установите необходимые зависимости для openssl
+# Install dependency for openssl
 RUN apk add --no-cache openssl
 
 COPY --from=builder /app/node_modules ./node_modules

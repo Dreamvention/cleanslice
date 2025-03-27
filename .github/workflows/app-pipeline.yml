@@ -19,5 +19,8 @@ jobs:
         run: docker build -t ${{ secrets.REPO_URL }}:cmx-app-${GITHUB_SHA::7} .
         working-directory: app
 
+      - name: Run docker login
+        run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 241533120616.dkr.ecr.us-east-1.amazonaws.com
+
       - name: Push image to repo
         run: docker push ${{ secrets.REPO_URL }}:cmx-app-${GITHUB_SHA::7}

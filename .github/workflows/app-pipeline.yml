@@ -1,0 +1,23 @@
+name: App CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/**'
+  workflow_dispatch:
+
+jobs:
+  build-deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Build docker image
+        run: docker build -t ${{ secrets.REPO_URL }}:cmx-app-${GITHUB_SHA::7} .
+        working-directory: app
+
+      - name: Push image to repo
+        run: docker push ${{ secrets.REPO_URL }}:cmx-app-${GITHUB_SHA::7}

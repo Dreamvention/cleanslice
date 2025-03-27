@@ -1,0 +1,26 @@
+name: App CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'admin/**'
+  workflow_dispatch:
+
+jobs:
+  build-deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Build docker image
+        run: docker build -t ${{ secrets.REPO_URL }}:cmx-admin-${GITHUB_SHA::7} .
+        working-directory: admin
+
+      - name: Run docker login
+        run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 241533120616.dkr.ecr.us-east-1.amazonaws.com
+
+      - name: Push image to repo
+        run: docker push ${{ secrets.REPO_URL }}:cmx-admin-${GITHUB_SHA::7}

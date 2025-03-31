@@ -1,11 +1,11 @@
-name: App CI/CD Pipeline
+name: Admin CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'admin/**'
+      - "admin/**"
   workflow_dispatch:
 
 jobs:
@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
       - name: Build docker image
         run: docker build -t ${{ secrets.REPO_URL }}:cmx-admin-${GITHUB_SHA::7} .
         working-directory: admin

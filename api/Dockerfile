@@ -10,6 +10,7 @@ RUN npm i
 
 COPY . .
 
+RUN npx prisma generate
 RUN npm run build
 
 FROM node:22-alpine
@@ -21,11 +22,11 @@ RUN apk add --no-cache openssl
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-COPY package.json entrypoint.sh prisma ./
+COPY package.json prisma ./
 
-RUN npm install -g prisma && chmod 755 /app/entrypoint.sh
+RUN npm install -g prisma
 
 ENV PORT=3000
 EXPOSE 3000
 
-CMD ["/app/entrypoint.sh"]
+CMD ["npm", "run", "start:prod"]

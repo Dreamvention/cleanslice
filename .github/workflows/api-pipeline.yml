@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-deploy:
+  build:
     runs-on: self-hosted
     steps:
       - name: Checkout Repository
@@ -24,3 +24,29 @@ jobs:
 
       - name: Push image to repo
         run: docker push ${{ secrets.REPO_URL }}:cmx-api-${GITHUB_SHA::7}
+
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Clone infra repo
+        uses: actions/checkout@v4
+          with:
+            repository: ${{ secrets.HELM_REPO_URL }}
+            ref: 'main'
+
+      - name: Setup git config
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "<>"
+
+      - name: Update image tag
+        run: |
+          sed -i 'd/tag: cmx-api/' ./helm/cmx-api/values.yaml
+          echo "  tag: cmx-api-${GITHUB_SHA::7}" >> ./helm/cmx-api/values.yaml
+
+      - name: Commit and push image tag
+        run: |
+          export COMMIT_MESSAGE="Update API image tag: ${GITHUB_SHA::7}"
+          git add ./helm/cmx-api/values.yaml
+          git commit -m "$COMMIT_MESSAGE"
+          git push

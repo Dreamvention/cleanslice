@@ -28,21 +28,18 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - name: Clone infra repo
-        uses: actions/checkout@v4
-          with:
-            repository: ${{ secrets.HELM_REPO_URL }}
-            ref: 'main'
-
-      - name: Setup git config
+      - name: Setup git config and clone infra repo
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "<>"
+          git clone git@github.com:${{ secrets.HELM_REPO_URL }}.git
+        working-directory: /tmp/
 
       - name: Update image tag
         run: |
           sed -i 'd/tag: cmx-api/' ./helm/cmx-api/values.yaml
           echo "  tag: cmx-api-${GITHUB_SHA::7}" >> ./helm/cmx-api/values.yaml
+        working-directory: /tmp/gitops
 
       - name: Commit and push image tag
         run: |
@@ -50,3 +47,4 @@ jobs:
           git add ./helm/cmx-api/values.yaml
           git commit -m "$COMMIT_MESSAGE"
           git push
+        working-directory: /tmp/gitops

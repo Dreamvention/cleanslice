@@ -37,7 +37,7 @@ jobs:
 
       - name: Update image tag
         run: |
-          sed -i 'd/tag: cmx-api/' ./helm/cmx-api/values.yaml
+          sed -i '/tag: cmx-api/d' ./helm/cmx-api/values.yaml
           echo "  tag: cmx-api-${GITHUB_SHA::7}" >> ./helm/cmx-api/values.yaml
         working-directory: /tmp/gitops
 

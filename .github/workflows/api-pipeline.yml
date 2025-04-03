@@ -48,3 +48,7 @@ jobs:
           git commit -m "$COMMIT_MESSAGE"
           git push
         working-directory: /tmp/gitops
+
+      - name: Cleanup
+        run: rm -rf gitops
+        working-directory: /tmp/

@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-deploy:
+  build:
     runs-on: self-hosted
     steps:
       - name: Checkout Repository
@@ -24,3 +24,31 @@ jobs:
 
       - name: Push image to repo
         run: docker push ${{ secrets.REPO_URL }}:cmx-admin-${GITHUB_SHA::7}
+
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Setup git config and clone infra repo
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "<>"
+          git clone git@github.com:${{ secrets.HELM_REPO_URL }}.git
+        working-directory: /tmp/
+
+      - name: Update image tag
+        run: |
+          sed -i '/tag: cmx-admin/d' ./helm/cmx-admin/values.yaml
+          echo "  tag: cmx-admin-${GITHUB_SHA::7}" >> ./helm/cmx-admin/values.yaml
+        working-directory: /tmp/gitops
+
+      - name: Commit and push image tag
+        run: |
+          export COMMIT_MESSAGE="Update ADMIN image tag: ${GITHUB_SHA::7}"
+          git add ./helm/cmx-admin/values.yaml
+          git commit -m "$COMMIT_MESSAGE"
+          git push
+        working-directory: /tmp/gitops
+
+      - name: Cleanup
+        run: rm -rf gitops
+        working-directory: /tmp/

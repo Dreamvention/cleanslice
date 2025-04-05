@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build docker image
-        run: docker build -t ${{ secrets.REPO_URL }}:cmx-admin-${GITHUB_SHA::7} .
+        run: docker build --build-arg API_URL=${API_URL} -t ${{ secrets.REPO_URL }}:cmx-admin-${GITHUB_SHA::7} .
         working-directory: admin
 
       - name: Run docker login

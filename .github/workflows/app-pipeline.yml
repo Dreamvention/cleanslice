@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'app/**'
+      - "app/**"
   workflow_dispatch:
 
 jobs:
@@ -14,9 +14,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
       - name: Build docker image
-        run: docker build -t ${{ secrets.REPO_URL }}:cmx-app-${GITHUB_SHA::7} .
+        run: docker build --build-arg API_URL=${API_URL} -t ${{ secrets.REPO_URL }}:cmx-app-${GITHUB_SHA::7} .
         working-directory: app
 
       - name: Run docker login

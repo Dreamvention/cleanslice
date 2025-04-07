@@ -28,6 +28,10 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
+      - name: Cleanup before start
+        run: rm -rf gitops
+        working-directory: /tmp/
+
       - name: Setup git config and clone infra repo
         run: |
           git config --global user.name "GitHub Actions"

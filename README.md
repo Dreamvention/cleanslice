@@ -1,6 +1,8 @@
 # Clean Slice
 
-![Clean/Slice Architecture](./docs/clean-slice-architecture-logo.png)
+<div align="center">
+  <img src="./docs/clean-slice-architecture-logo-bg.png" alt="Clean/Slice Architecture">
+</div>
 
 The Clean/Slice Architecture for building modern Agent-friendly applications.
 
@@ -60,7 +62,7 @@ Slice Architecture is the next step in Clean Architecture evolution. A slice is 
 
 ## Screaming architecture
 
-"Screaming Architecture" is a term coined by Robert C. Martin, also known as Uncle Bob. The concept of Screaming Architecture is that the structure of a software application should clearly reflect its primary purpose and domain. When someone looks at the high-level structure of its source code, the purpose of the application should be immediately evident – it should “scream” its intent.
+"Screaming Architecture" is a term coined by Robert C. Martin, also known as Uncle Bob. The concept of Screaming Architecture is that the structure of a software application should clearly reflect its primary purpose and domain. When someone looks at the high-level structure of its source code, the purpose of the application should be immediately evident – it should "scream" its intent.
 
 ## Abstract when necessary
 

@@ -1,6 +1,8 @@
-# Prime Slice
+# Clean Slice
 
-The Slice Architecture for Coso Learning manager projects.
+![Clean/Slice Architecture](./docs/clean-slice-architecture-logo.png)
+
+The Clean/Slice Architecture for building modern Agent-friendly applications.
 
 ### Contents
 

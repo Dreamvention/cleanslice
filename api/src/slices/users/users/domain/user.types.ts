@@ -2,6 +2,7 @@ export interface IUserData {
   id: string;
   name: string;
   email: string;
+  emailConfirmed: boolean;
   emailError?: boolean;
   emailErrorDescription?: string;
   emailNotifications?: boolean;

@@ -8,7 +8,6 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import * as fs from 'fs';
 
 async function bootstrap() {
-  console.log('HI');
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));

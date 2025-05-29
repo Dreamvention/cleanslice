@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { pages } from '../../pages';
 const auth = useAuthStore();
 </script>
 

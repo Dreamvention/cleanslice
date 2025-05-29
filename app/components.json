@@ -4,13 +4,13 @@
   "typescript": true,
   "tailwind": {
     "config": "configs/tailwind.config.ts",
-    "css": "slices/theme/assets/css/tailwind.css",
+    "css": "slices/setup/theme/assets/css/tailwind.css",
     "baseColor": "slate",
     "cssVariables": true
   },
   "framework": "nuxt",
   "aliases": {
-    "components": "~/slices/theme/components",
-    "utils": "~/slices/theme/utils/cn"
+    "components": "~/slices/setup/theme/components",
+    "utils": "~/slices/setup/theme/utils/cn"
   }
 }

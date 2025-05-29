@@ -8,7 +8,6 @@ const getSidebarByGroup = (group: MenuGroupTypes) => {
   return items.filter((item) => item.group == group);
 };
 
-console.log(route.params.teamId);
 </script>
 
 <template>

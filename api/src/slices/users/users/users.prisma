@@ -13,6 +13,12 @@ model User {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
+  //Used only by Basic Auth
+  password                   String?   @default("")
+  emailConfirmed             Boolean?  @default(false)
+  emailConfirmationToken     String?   @default("")
+  emailConfirmationExpiresAt DateTime?
+
   teams     Team[]
   teamUsers TeamUser[]
 }

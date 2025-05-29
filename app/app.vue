@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Toaster from '#theme/components/ui/toast/Toaster.vue';
-import { useNuxtApp } from '#app';
+// import Toaster from '#theme/components/ui/toast/Toaster.vue';
+// import { useNuxtApp } from '#app';
 
-const nuxtApp = useNuxtApp();
+// const nuxtApp = useNuxtApp();
 
 // nuxtApp.hook('vue:error', (error) => {
 //   console.error('Global error handler:', error);

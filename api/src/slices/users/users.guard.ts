@@ -1,37 +1,32 @@
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  HttpException,
-  HttpStatus,
-  UnauthorizedException,
-} from '@nestjs/common';
-
-import { AuthenticationGuard } from '#aws/cognito';
-import { ApiKeysGuard } from '#users/apiKeys';
+import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { AuthGuard } from './auth/auth.guard';
+import { ApiKeyGuard } from './apiKeys/apiKey.guard';
+import { CoreGuard } from '../core/core.guard';
+import { Reflector } from '@nestjs/core';
 
 @Injectable()
-export class UsersGuard implements CanActivate {
-  constructor(private readonly authenticationGuard: AuthenticationGuard, private readonly apiKeysGuard: ApiKeysGuard) {}
+export class UsersGuard extends CoreGuard {
+  constructor(
+    private readonly authGuard: AuthGuard,
+    private readonly apiKeyGuard: ApiKeyGuard,
+    reflector: Reflector,
+  ) {
+    super(reflector);
+  }
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  protected async handleAuth(context: ExecutionContext): Promise<boolean> {
     try {
-      // Check Cognito Guard
-      await this.authenticationGuard.canActivate(context);
-      return true;
+      // Try JWT auth first
+      return await this.executeAuthCheck(this.authGuard, context);
     } catch (e) {
-      // Cognito failed, so let's check the API Key Guard
-      let response = false;
+      console.log('auth guard failed, trying api key', e);
       try {
-        response = await this.apiKeysGuard.canActivate(context);
+        // If JWT fails, try API key
+        return await this.executeAuthCheck(this.apiKeyGuard, context);
       } catch (e) {
-        // API Key failed as well
+        console.log('api key guard failed', e);
         throw new UnauthorizedException();
       }
-      if (!response) {
-        throw new UnauthorizedException();
-      }
-      return true;
     }
   }
 }

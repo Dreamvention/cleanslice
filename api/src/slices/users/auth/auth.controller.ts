@@ -20,68 +20,80 @@ export class AuthController {
   }
 
   @Public()
-  @ApiOperation({ description: 'Login with email and password', operationId: 'login' })
+  @ApiOperation({ description: 'Login user', operationId: 'login' })
   @ApiBody({ type: LoginUserDto })
-  @FlatResponse()
-  @ApiOkResponse({ type: AuthDto })
   @Post('login')
   async login(@Body() data: LoginUserDto) {
-    return await this.authGateway.login(data.email, data.password);
-  }
-
-  @Public()
-  @ApiOperation({ description: 'Register a new user', operationId: 'register' })
-  @ApiBody({ type: RegisterUserDto })
-  @ApiOkResponse({ type: UserDto })
-  @ApiResponse({ status: 409, description: 'User already exists', type: BaseErrorDto })
-  @Post('register')
-  async register(@Body() data: RegisterUserDto): Promise<IUserData> {
-    data.roles = [RoleTypes.User];
-    return await this.authGateway.register(data);
-  }
-
-  @Public()
-  @ApiOperation({ description: 'Refresh access token', operationId: 'refresh' })
-  @ApiBody({ type: RefreshTokenDto })
-  @FlatResponse()
-  @ApiOkResponse({ type: AuthDto })
-  @Post('refresh')
-  async refresh(@Body() refreshToken: RefreshTokenDto): Promise<IAuthData> {
-    return await this.authGateway.refreshToken(refreshToken.token);
-  }
-
-  @Public()
-  @Get('confirm')
-  @Redirect()
-  @FlatResponse()
-  async confirm(
-    @Query('code') code: string,
-    @Query('username') username: string,
-    @Query('redirectUrl') redirectUrl: string,
-  ) {
     try {
-      await this.authGateway.confirm(username, code);
-      return { url: redirectUrl };
+      return await this.authGateway.login(data.email, data.password);
     } catch (e) {
       throw new BadRequestException(e.message);
     }
   }
 
   @Public()
-  @ApiOperation({ description: 'Resend confirm email to username', operationId: 'resendConfirm' })
+  @ApiOperation({ description: 'Register user', operationId: 'register' })
+  @ApiBody({ type: RegisterUserDto })
+  @ApiOkResponse({ type: UserDto })
+  @ApiResponse({ status: 409, description: 'User already exists', type: BaseErrorDto })
+  @Post('register')
+  async register(@Body() data: RegisterUserDto): Promise<IUserData> {
+    data.roles = [RoleTypes.User];
+    try {
+      return await this.authGateway.register(data);
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
+  }
+
+  @Public()
+  @ApiOperation({ description: 'Confirm email', operationId: 'confirm' })
+  @Get('confirm')
+  async confirm(@Query('token') token: string, @Query('email') email: string) {
+    try {
+      await this.authGateway.confirm(token, email);
+      return { message: 'Email confirmed successfully' };
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
+  }
+
+  @Public()
+  @ApiOperation({ description: 'Resend confirmation email', operationId: 'resendConfirm' })
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
+        email: { type: 'string' },
       },
-      required: ['name'],
+      required: ['email'],
     },
   })
   @Post('resendConfirm')
-  async resendConfirm(@Body('name') name: string) {
+  async resendConfirm(@Body('email') email: string) {
     try {
-      await this.authGateway.resendConfirm(name);
+      await this.authGateway.resendConfirm(email);
+      return { message: 'Confirmation email sent successfully' };
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
+  }
+
+  @Public()
+  @ApiOperation({ description: 'Refresh token', operationId: 'refreshToken' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        refreshToken: { type: 'string' },
+      },
+      required: ['refreshToken'],
+    },
+  })
+  @Post('refreshToken')
+  async refreshToken(@Body('refreshToken') refreshToken: string) {
+    try {
+      return await this.authGateway.refreshToken(refreshToken);
     } catch (e) {
       throw new BadRequestException(e.message);
     }

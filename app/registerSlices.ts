@@ -3,14 +3,7 @@ import * as path from 'path';
 
 export const registerSlices = (): string[] => {
   const settings = {
-    specialSlices: [
-      './slices/setup',
-      './slices/theme',
-      './slices/common',
-      './slices/auth',
-      './slices/teams',
-      './slices/api',
-    ],
+    specialSlices: ['./slices/setup', './slices/common', './slices/user'],
   };
 
   const slices = fs.readdirSync('./slices').filter((entry) => {
@@ -20,11 +13,11 @@ export const registerSlices = (): string[] => {
 
   if (!slices.length) return [];
 
-  const result: string[] = [...settings.specialSlices];
+  const result: string[] = [];
 
-  const collectSlices = (path: string, exclusions: string[] = []) => {
+  const collectSlices = (path: string) => {
     if (fs.existsSync(`${path}/nuxt.config.ts`)) {
-      if (!exclusions.includes(path)) {
+      if (!result.includes(path)) {
         result.push(path);
       }
     } else {
@@ -34,16 +27,20 @@ export const registerSlices = (): string[] => {
       });
 
       for (const subPath of subPaths) {
-        collectSlices(`${path}/${subPath}`, exclusions);
+        collectSlices(`${path}/${subPath}`);
       }
     }
   };
 
+  // Process special slices first
+  for (const specialSlice of settings.specialSlices) {
+    collectSlices(specialSlice);
+  }
+
+  // Process remaining slices
   for (const slice of slices) {
     const slicePath = `./slices/${slice}`;
-    if (settings.specialSlices.some((special) => special.includes(slice))) continue;
-
-    collectSlices(slicePath, settings.specialSlices);
+    collectSlices(slicePath);
   }
 
   return result;

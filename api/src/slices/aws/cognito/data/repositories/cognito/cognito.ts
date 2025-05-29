@@ -120,7 +120,7 @@ export class Cognito implements ICognito {
 
   async authenticateUser(user: IAuthRequest): Promise<AuthenticationResultType | undefined> {
     const { name, password } = user;
-
+    console.log(process.env.COGNITO_CLIENT_ID);
     const result = await this.client.initiateAuth({
       AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
       ClientId: process.env.COGNITO_CLIENT_ID,

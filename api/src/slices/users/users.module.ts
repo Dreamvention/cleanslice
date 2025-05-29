@@ -7,15 +7,20 @@ import { UsersModule as UsersUsersModule } from './users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { UsersGuard } from './users.guard';
 import { AwsModule } from '#aws';
-import { MailsModule } from './mails/mails.module';
+import { MailModule } from './mail/mail.module';
+import { AuthGuard } from './auth/auth.guard';
+import { ApiKeyGuard } from './apiKeys/apiKey.guard';
+
 @Module({
-  imports: [UsersUsersModule, AuthModule, ApiKeysModule, AwsModule, TeamsModule, MailsModule],
+  imports: [UsersUsersModule, AuthModule, ApiKeysModule, AwsModule, TeamsModule, MailModule],
   providers: [
+    AuthGuard,
+    ApiKeyGuard,
     {
       provide: APP_GUARD,
       useClass: UsersGuard,
     },
   ],
-  exports: [UsersUsersModule, AuthModule, ApiKeysModule, TeamsModule, MailsModule],
+  exports: [UsersUsersModule, AuthModule, ApiKeysModule, TeamsModule, MailModule, AuthGuard, ApiKeyGuard],
 })
 export class UsersModule {}

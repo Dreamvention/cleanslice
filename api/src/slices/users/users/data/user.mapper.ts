@@ -2,6 +2,7 @@ import DB, { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { IUserData, RoleTypes, ICreateUserData, IUpdateUserData } from '../domain';
 import { v4 as uuid } from 'uuid';
+import { ConfigService } from '@nestjs/config';
 
 export type IUserResponse = DB.User;
 
@@ -10,11 +11,14 @@ export type IUserUpdateRequest = Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserU
 
 @Injectable()
 export class UserMapper {
+  constructor(private configService: ConfigService) {}
+
   toData(data: IUserResponse): IUserData {
     return {
       id: data.id,
       name: data.name,
       email: data.email,
+      emailConfirmed: data.emailConfirmed,
       emailError: data.emailError,
       emailErrorDescription: data.emailErrorDescription,
       emailNotifications: data.emailNotifications,
@@ -33,6 +37,7 @@ export class UserMapper {
       name: data.name,
       email: data.email,
       roles: data.roles,
+      verified: this.configService.get('IS_USER_VERIFIED') === 'true',
     };
   }
 

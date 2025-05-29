@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { pages } from '../pages';
 
 export enum MenuGroupTypes {
   Project = 'project',

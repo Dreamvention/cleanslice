@@ -6,7 +6,7 @@ import { registerSlices } from './registerSlices';
 export default defineNuxtConfig({
   devtools: { enabled: false },
   extends: [...registerSlices()],
-
+  ssr: false,
   vite: {
     define: {
       'process.env': process.env,

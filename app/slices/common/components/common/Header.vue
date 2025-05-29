@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { pages } from '../../pages';
 const authStore = useAuthStore();
 </script>
 
@@ -22,7 +21,6 @@ const authStore = useAuthStore();
         <NuxtLink v-else :to="{ name: pages.login }" class="text-sm hover:font-semibold inline-flex items-center"
           ><Icon name="LogIn" /><span class="hidden sm:block ml-2">Sign in</span></NuxtLink
         >
-        <ModelCreateDialog />
       </div>
     </div>
   </nav>

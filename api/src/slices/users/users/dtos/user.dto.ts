@@ -12,6 +12,8 @@ export class UserDto implements IUserData {
   email: string;
 
   @ApiProperty()
+  emailConfirmed: boolean;
+  @ApiProperty()
   emailError?: boolean;
 
   @ApiProperty()

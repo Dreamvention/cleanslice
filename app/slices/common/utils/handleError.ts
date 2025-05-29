@@ -1,5 +1,4 @@
 import { useToast } from '#theme/components/ui/toast/use-toast';
-import { pages } from '../pages';
 
 export const handleError = async (error: any) => {
   const { toast } = useToast();

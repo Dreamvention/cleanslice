@@ -1,0 +1,17 @@
+export const pages = {
+  home: 'index',
+  dashboard: 'dashboard',
+  logout: 'logout',
+  login: 'login',
+  register: 'register',
+  account: 'account',
+  confirm: 'confirm',
+  privacyPolicy: 'privacy-policy',
+  termsOfUse: 'terms-of-use',
+  teams: 'teams',
+  teamsItem: 'teams-item',
+  teamsCreate: 'teams-create',
+  teamsEdit: 'teams-teamId-edit',
+  apiKeys: 'teams-teamId-apiKeys',
+  apiKeysItem: 'teams-teamId-apiKeys-id',
+};

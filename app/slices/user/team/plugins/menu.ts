@@ -3,7 +3,7 @@ import { MenuGroupTypes } from '#common';
 export default defineNuxtPlugin(async () => {
   const menu = useMenuStore();
   const teamsStore = useTeamStore();
-  await teamsStore.init();
+  //   await teamsStore.init();
   if (!teamsStore.isLoading) {
     // if (teamsStore.hasTeam) {
     //   menu.addItem({

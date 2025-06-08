@@ -3,7 +3,7 @@ import * as path from 'path';
 
 export const registerSlices = (): string[] => {
   const settings = {
-    specialSlices: ['./slices/setup', './slices/common', './slices/user'],
+    specialSlices: ['./slices/setup', './slices/user', './slices/common'],
   };
 
   const slices = fs.readdirSync('./slices').filter((entry) => {

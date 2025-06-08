@@ -53,11 +53,11 @@ export class CognitoAuthGateway implements IAuthGateway {
       throw new UsersErrors.UserNotVerifiedError();
     }
 
-    const team = await this.prisma.team.findFirst({ where: { userId: user.id } });
+    // const team = await this.prisma.team.findFirst({ where: { userId: user.id } });
 
     return {
       id: user.id,
-      teamId: team ? team.id : undefined,
+      // teamId: team ? team.id : undefined,
       accessToken: response.IdToken,
       refreshToken: response.RefreshToken,
     };

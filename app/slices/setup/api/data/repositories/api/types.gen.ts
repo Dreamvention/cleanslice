@@ -82,6 +82,20 @@ export type UpdateUserDto = {
   roles: Array<Role>;
 };
 
+export type BaseErrorDto = {
+  statusCode: number;
+  code: string;
+  message: string;
+  timestamp: string;
+  path: string;
+};
+
+export type AuthDto = {
+  id: string;
+  accessToken: string;
+  refreshToken: string;
+};
+
 export type LoginUserDto = {
   email: string;
   password: string;
@@ -93,14 +107,6 @@ export type RegisterUserDto = {
   email: string;
   password: string;
   deviceId: string;
-};
-
-export type BaseErrorDto = {
-  statusCode: number;
-  code: string;
-  message: string;
-  timestamp: string;
-  path: string;
 };
 
 export type ApiKeyDto = {
@@ -376,6 +382,15 @@ export type MeData = {
   url: '/auth/me';
 };
 
+export type MeErrors = {
+  /**
+   * Unauthorized - Invalid or missing access token
+   */
+  401: BaseErrorDto;
+};
+
+export type MeError = MeErrors[keyof MeErrors];
+
 export type MeResponses = {
   /**
    * Successfully received model list
@@ -388,17 +403,43 @@ export type MeResponses = {
 export type MeResponse = MeResponses[keyof MeResponses];
 
 export type LoginData = {
+  /**
+   * User login credentials
+   */
   body: LoginUserDto;
   path?: never;
   query?: never;
   url: '/auth/login';
 };
 
-export type LoginResponses = {
-  201: unknown;
+export type LoginErrors = {
+  /**
+   * Invalid credentials or validation error
+   */
+  400: BaseErrorDto;
+  /**
+   * Unauthorized - Invalid credentials
+   */
+  401: BaseErrorDto;
 };
 
+export type LoginError = LoginErrors[keyof LoginErrors];
+
+export type LoginResponses = {
+  /**
+   * Successfully received model list
+   */
+  200: SingleModel & {
+    data?: AuthDto;
+  };
+};
+
+export type LoginResponse = LoginResponses[keyof LoginResponses];
+
 export type RegisterData = {
+  /**
+   * User registration information
+   */
   body: RegisterUserDto;
   path?: never;
   query?: never;
@@ -415,27 +456,53 @@ export type RegisterErrors = {
 export type RegisterError = RegisterErrors[keyof RegisterErrors];
 
 export type RegisterResponses = {
-  200: UserDto;
+  /**
+   * Successfully received model list
+   */
+  200: SingleModel & {
+    data?: UserDto;
+  };
 };
 
 export type RegisterResponse = RegisterResponses[keyof RegisterResponses];
 
-export type ConfirmData = {
+export type ConfirmEmailData = {
   body?: never;
   path?: never;
   query: {
+    /**
+     * Email confirmation token
+     */
     token: string;
+    /**
+     * Email address to confirm
+     */
     email: string;
   };
   url: '/auth/confirm';
 };
 
-export type ConfirmResponses = {
+export type ConfirmEmailErrors = {
+  /**
+   * Invalid or expired confirmation token
+   */
+  400: BaseErrorDto;
+};
+
+export type ConfirmEmailError = ConfirmEmailErrors[keyof ConfirmEmailErrors];
+
+export type ConfirmEmailResponses = {
+  /**
+   * Email successfully confirmed
+   */
   200: unknown;
 };
 
-export type ResendConfirmData = {
+export type ResendConfirmationData = {
   body: {
+    /**
+     * Email address to resend confirmation to
+     */
     email: string;
   };
   path?: never;
@@ -443,12 +510,27 @@ export type ResendConfirmData = {
   url: '/auth/resendConfirm';
 };
 
-export type ResendConfirmResponses = {
-  201: unknown;
+export type ResendConfirmationErrors = {
+  /**
+   * Invalid email or user not found
+   */
+  400: BaseErrorDto;
+};
+
+export type ResendConfirmationError = ResendConfirmationErrors[keyof ResendConfirmationErrors];
+
+export type ResendConfirmationResponses = {
+  /**
+   * Confirmation email sent successfully
+   */
+  200: unknown;
 };
 
 export type RefreshTokenData = {
   body: {
+    /**
+     * Valid refresh token
+     */
     refreshToken: string;
   };
   path?: never;
@@ -456,9 +538,25 @@ export type RefreshTokenData = {
   url: '/auth/refreshToken';
 };
 
-export type RefreshTokenResponses = {
-  201: unknown;
+export type RefreshTokenErrors = {
+  /**
+   * Invalid or expired refresh token
+   */
+  400: BaseErrorDto;
 };
+
+export type RefreshTokenError = RefreshTokenErrors[keyof RefreshTokenErrors];
+
+export type RefreshTokenResponses = {
+  /**
+   * Successfully received model list
+   */
+  200: SingleModel & {
+    data?: AuthDto;
+  };
+};
+
+export type RefreshTokenResponse = RefreshTokenResponses[keyof RefreshTokenResponses];
 
 export type GetApiKeysData = {
   body?: never;

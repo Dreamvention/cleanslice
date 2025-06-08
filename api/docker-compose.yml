@@ -26,15 +26,6 @@ services:
       POSTGRES_DB: cleanslice-api-local-database
     volumes:
       - ./docker/postgresql:/var/lib/postgresql/data
-  cognito-local:
-    image: jagregory/cognito-local:latest
-    ports:
-      - '9229:9229' # Expose the local Cognito port
-    environment:
-      - AWS_DEFAULT_REGION=us-east-1
-      - DEBUG=1
-    volumes:
-      - ./docker/cognito:/app/.cognito # optional: store config/data
     # Run this command to create a user pool
     # aws --endpoint-url http://localhost:9229 --region us-east-1 cognito-idp create-user-pool --pool-name cleanslice-api-local-user-pool
     # aws --endpoint-url http://localhost:9229 --region us-east-1 cognito-idp create-user-pool-client --user-pool-id local_4jEOgEDY --client-name cleanslice-api-local-client

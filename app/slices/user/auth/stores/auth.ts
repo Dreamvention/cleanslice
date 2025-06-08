@@ -1,20 +1,12 @@
 import { defineStore } from 'pinia';
-import { AuthService, UserDto } from '#api/data';
+import { AuthService, AuthDto } from '#api/data';
 import { useCookie } from '#app';
-import { client } from '#api/data/repositories/api/client.gen';
 
-export type IAuthData = {
-  id: string;
-  accessToken: string;
-  refreshToken: string;
-};
-
-export const authCookieName = 'AUTH';
+export const authCookieName = process.env.AUTH_COOKIE_NAME || 'AUTH';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    auth: {} as null | IAuthData,
-    user: null as null | UserDto,
+    auth: null as null | AuthDto,
     loading: false,
   }),
 
@@ -28,21 +20,22 @@ export const useAuthStore = defineStore('auth', {
     isLoading: (state) => state.loading,
   },
   actions: {
+    authenticate(auth: AuthDto) {
+      this.auth = auth;
+      const authCookie = useCookie(authCookieName);
+      authCookie.value = JSON.stringify(auth);
+      handleApiAuthentication(auth.accessToken);
+    },
+
     async init() {
       console.log('auth init start...');
       this.loading = true;
-      const authCookie = useCookie<IAuthData | null>(authCookieName, {
+      const authCookie = useCookie<AuthDto | null>(authCookieName, {
         default: () => null,
       });
       this.auth = authCookie.value;
       if (this.isAuthenticated) {
-        handleApiAuthentication(this.auth.accessToken);
-        const response = await AuthService.me();
-        if (response.data?.data) {
-          this.user = response.data.data;
-        } else {
-          this.logout();
-        }
+        handleApiAuthentication(this.auth?.accessToken);
       }
       this.loading = false;
       console.log('auth init finished...');
@@ -51,52 +44,32 @@ export const useAuthStore = defineStore('auth', {
     async refreshToken() {
       try {
         this.loading = true;
-        const app = useNuxtApp();
         if (this.auth && !!this.auth.refreshToken) {
-          const response = await AuthService.refresh({
+          const response = await AuthService.refreshToken({
             body: {
-              token: this.auth.refreshToken,
+              refreshToken: this.auth.refreshToken,
             },
           });
-          if (response.data?.accessToken) {
-            this.auth.accessToken = response.data.accessToken;
-            const authCookie = useCookie(authCookieName);
-            authCookie.value = JSON.stringify(this.auth);
-            // Cookies.set(authCookieName, JSON.stringify(th
-            // Cookies.set(authCookieName, JSON.stringify(this.auth), {
-            //   expires: 30,
-            //   secure: process.env.NODE_ENV !== 'development',
-            //   domain: process.env.NODE_ENV === 'development' ? 'localhost' : undefined,
-            // }); // secure: true for HTTPS
-            handleApiAuthentication(this.auth.accessToken);
+          if (response.data?.data) {
+            this.authenticate(response.data.data);
           } else {
-            this.auth = {} as IAuthData;
+            this.logout();
           }
         }
         this.loading = false;
       } catch (error) {
-        this.auth = {} as IAuthData;
+        this.logout();
         this.loading = false;
       }
     },
 
     async login(email: string, password: string) {
-      console.log('email response', email);
       try {
         this.loading = true;
         const response = await AuthService.login({ body: { email, password, deviceId: 'app' } });
 
-        console.log('refreshToken response', response);
         if (response.data?.data?.accessToken) {
-          this.auth = response.data.data;
-          const authCookie = useCookie(authCookieName);
-          authCookie.value = JSON.stringify(this.auth);
-          // Cookies.set(authCookieName, JSON.stringify(this.auth), {
-          //   expires: 30,
-          //   secure: process.env.NODE_ENV !== 'development',
-          //   domain: process.env.NODE_ENV === 'development' ? 'localhost' : undefined,
-          // }); // secure: true for HTTPS
-          handleApiAuthentication(this.auth.accessToken);
+          this.authenticate(response.data.data);
         }
         return response;
         this.loading = false;
@@ -108,7 +81,6 @@ export const useAuthStore = defineStore('auth', {
 
     async register(name: string, email: string, password: string) {
       try {
-        const app = useNuxtApp();
         await AuthService.register({
           body: { name, email, password, deviceId: 'app' },
         });
@@ -119,13 +91,12 @@ export const useAuthStore = defineStore('auth', {
 
     async logout() {
       handleAccountLogout();
-      this.auth = {} as IAuthData;
+      this.auth = null;
     },
 
     async resendConfirm(email: string) {
-      const app = useNuxtApp();
-      await AuthService.resendConfirm({
-        body: { name: email },
+      await AuthService.resendConfirmation({
+        body: { email: email },
       });
     },
   },

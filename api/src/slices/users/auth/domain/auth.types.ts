@@ -1,6 +1,6 @@
 export interface IAuthData {
   id: string;
-  teamId?: string;
+  // teamId?: string;
   accessToken: string;
   refreshToken: string;
 }

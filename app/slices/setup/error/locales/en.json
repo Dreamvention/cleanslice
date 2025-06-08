@@ -1,0 +1,9 @@
+{
+  "locale.en": "English",
+  "locale.fr": "French",
+  "locale.es": "Spanish",
+  "Home": "Home",
+  "welcome": "Welcome to the world of Python",
+  "UNEXPECTED_ERROR_title": "Oops! Something Went Wrong",
+  "UNEXPECTED_ERROR_description": "We encountered an unexpected error. Please try again, and if the problem persists, contact our support team for assistance."
+}

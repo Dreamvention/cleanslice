@@ -2,11 +2,14 @@ export default defineNuxtPlugin(async () => {
   const authStore = useAuthStore();
   await authStore.init();
 
+  const accountStore = useAccountStore();
+  await accountStore.init();
+
   const teamStore = useTeamStore();
   await teamStore.init();
 
   addRouteMiddleware(
-    'auth',
+    'init',
     async (to) => {
       const isPublic = to.meta.public || false;
       const onlyNotAuthenticated = to.meta.onlyNotAuthenticated || false;
@@ -19,6 +22,7 @@ export default defineNuxtPlugin(async () => {
       } else if (onlyNotAuthenticated && authStore.isAuthenticated) {
         console.log('Only Not Authenticated Allowed. Forwarding to page ', pages.agents);
         if (teamStore.hasTeam) {
+          return navigateTo({ name: pages.teams });
           // return navigateTo({ name: pages.agents });
         } else {
           return navigateTo({ name: pages.teamsCreate });

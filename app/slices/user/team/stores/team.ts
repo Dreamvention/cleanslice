@@ -19,7 +19,7 @@ export const useTeamStore = defineStore('team', {
       return state.team;
     },
     hasTeam: (state) => {
-      return !!state.team?.id;
+      return !!state.teams.length;
     },
     isLoading: (state) => state.loading,
   },
@@ -32,7 +32,6 @@ export const useTeamStore = defineStore('team', {
     async init() {
       console.log('teams init start... hasTeam:', this.hasTeam);
       this.loading = true;
-      // this.team = JSON.parse(Cookies.get(teamCookieName) || '{}');
 
       if (!this.hasTeam) {
         await this.fetchTeams();
@@ -43,16 +42,11 @@ export const useTeamStore = defineStore('team', {
 
     async fetchTeams() {
       try {
-        const userStore = useAuthStore();
-        const auth = userStore.getAuth;
         this.loading = true;
-        const app = useNuxtApp();
         const response = await TeamsService.getTeams();
 
         if (response.data?.data) {
-          console.log('fetchTeams...');
           this.teams = response.data.data;
-          this.team = response.data.data[0];
         }
         this.loading = false;
       } catch (error) {
@@ -64,7 +58,6 @@ export const useTeamStore = defineStore('team', {
     async createTeam(data: CreateTeamDto) {
       try {
         this.loading = true;
-        const app = useNuxtApp();
         const response = await TeamsService.createTeam({ body: data });
         if (response.data?.data) {
           await this.fetchTeams();

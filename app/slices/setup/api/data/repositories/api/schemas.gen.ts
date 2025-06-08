@@ -242,6 +242,49 @@ export const UpdateUserDtoSchema = {
   required: ['roles'],
 } as const;
 
+export const BaseErrorDtoSchema = {
+  type: 'object',
+  properties: {
+    statusCode: {
+      type: 'number',
+      example: 409,
+    },
+    code: {
+      type: 'string',
+      example: 'USER_ALREADY_EXISTS',
+    },
+    message: {
+      type: 'string',
+      example: 'A user with this email already exists.',
+    },
+    timestamp: {
+      type: 'string',
+      example: '2024-08-29T12:34:56.789Z',
+    },
+    path: {
+      type: 'string',
+      example: '/users/register',
+    },
+  },
+  required: ['statusCode', 'code', 'message', 'timestamp', 'path'],
+} as const;
+
+export const AuthDtoSchema = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'string',
+    },
+    accessToken: {
+      type: 'string',
+    },
+    refreshToken: {
+      type: 'string',
+    },
+  },
+  required: ['id', 'accessToken', 'refreshToken'],
+} as const;
+
 export const LoginUserDtoSchema = {
   type: 'object',
   properties: {
@@ -275,33 +318,6 @@ export const RegisterUserDtoSchema = {
     },
   },
   required: ['name', 'email', 'password', 'deviceId'],
-} as const;
-
-export const BaseErrorDtoSchema = {
-  type: 'object',
-  properties: {
-    statusCode: {
-      type: 'number',
-      example: 409,
-    },
-    code: {
-      type: 'string',
-      example: 'USER_ALREADY_EXISTS',
-    },
-    message: {
-      type: 'string',
-      example: 'A user with this email already exists.',
-    },
-    timestamp: {
-      type: 'string',
-      example: '2024-08-29T12:34:56.789Z',
-    },
-    path: {
-      type: 'string',
-      example: '/users/register',
-    },
-  },
-  required: ['statusCode', 'code', 'message', 'timestamp', 'path'],
 } as const;
 
 export const ApiKeyDtoSchema = {

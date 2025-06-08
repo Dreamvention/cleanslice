@@ -29,13 +29,20 @@ import type {
   UpdateUserResponse,
   MeData,
   MeResponse,
+  MeError,
   LoginData,
+  LoginResponse,
+  LoginError,
   RegisterData,
   RegisterResponse,
   RegisterError,
-  ConfirmData,
-  ResendConfirmData,
+  ConfirmEmailData,
+  ConfirmEmailError,
+  ResendConfirmationData,
+  ResendConfirmationError,
   RefreshTokenData,
+  RefreshTokenResponse,
+  RefreshTokenError,
   GetApiKeysData,
   GetApiKeysResponse,
   CreateApiKeyData,
@@ -212,20 +219,22 @@ export class UsersService {
 
 export class AuthService {
   /**
-   * Returns currently logged in user
+   * Get Current User
+   * Retrieves the profile information of the currently authenticated user. Requires a valid JWT access token.
    */
   public static me<ThrowOnError extends boolean = false>(options?: Options<MeData, ThrowOnError>) {
-    return (options?.client ?? _heyApiClient).get<MeResponse, unknown, ThrowOnError>({
+    return (options?.client ?? _heyApiClient).get<MeResponse, MeError, ThrowOnError>({
       url: '/auth/me',
       ...options,
     });
   }
 
   /**
-   * Login user
+   * User Login
+   * Authenticates a user and returns JWT access and refresh tokens.
    */
   public static login<ThrowOnError extends boolean = false>(options: Options<LoginData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+    return (options.client ?? _heyApiClient).post<LoginResponse, LoginError, ThrowOnError>({
       url: '/auth/login',
       ...options,
       headers: {
@@ -236,7 +245,8 @@ export class AuthService {
   }
 
   /**
-   * Register user
+   * User Registration
+   * Creates a new user account. The user will receive a confirmation email to verify their email address.
    */
   public static register<ThrowOnError extends boolean = false>(options: Options<RegisterData, ThrowOnError>) {
     return (options.client ?? _heyApiClient).post<RegisterResponse, RegisterError, ThrowOnError>({
@@ -250,20 +260,24 @@ export class AuthService {
   }
 
   /**
-   * Confirm email
+   * Confirm Email
+   * Confirms a user's email address using the token sent in the confirmation email.
    */
-  public static confirm<ThrowOnError extends boolean = false>(options: Options<ConfirmData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).get<unknown, unknown, ThrowOnError>({
+  public static confirmEmail<ThrowOnError extends boolean = false>(options: Options<ConfirmEmailData, ThrowOnError>) {
+    return (options.client ?? _heyApiClient).get<unknown, ConfirmEmailError, ThrowOnError>({
       url: '/auth/confirm',
       ...options,
     });
   }
 
   /**
-   * Resend confirmation email
+   * Resend Confirmation Email
+   * Resends the email confirmation link to the specified email address.
    */
-  public static resendConfirm<ThrowOnError extends boolean = false>(options: Options<ResendConfirmData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+  public static resendConfirmation<ThrowOnError extends boolean = false>(
+    options: Options<ResendConfirmationData, ThrowOnError>,
+  ) {
+    return (options.client ?? _heyApiClient).post<unknown, ResendConfirmationError, ThrowOnError>({
       url: '/auth/resendConfirm',
       ...options,
       headers: {
@@ -274,10 +288,11 @@ export class AuthService {
   }
 
   /**
-   * Refresh token
+   * Refresh Access Token
+   * Generates a new access token using a valid refresh token.
    */
   public static refreshToken<ThrowOnError extends boolean = false>(options: Options<RefreshTokenData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+    return (options.client ?? _heyApiClient).post<RefreshTokenResponse, RefreshTokenError, ThrowOnError>({
       url: '/auth/refreshToken',
       ...options,
       headers: {

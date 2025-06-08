@@ -50,12 +50,12 @@ export class BasicAuthGateway implements IAuthGateway {
       throw new UsersErrors.UserNotVerifiedError();
     }
 
-    const team = await this.prisma.team.findFirst({ where: { userId: user.id } });
+    // const team = await this.prisma.team.findFirst({ where: { userId: user.id } });
     const tokens = await this.createTokens(user);
 
     return {
       id: user.id,
-      teamId: team?.id,
+      // teamId: team?.id,
       ...tokens,
     };
   }
@@ -166,12 +166,12 @@ export class BasicAuthGateway implements IAuthGateway {
         throw new UnauthorizedException();
       }
 
-      const team = await this.prisma.team.findFirst({ where: { userId: user.id } });
+      // const team = await this.prisma.team.findFirst({ where: { userId: user.id } });
       const tokens = await this.createTokens(user);
 
       return {
         id: user.id,
-        teamId: team?.id,
+        // teamId: team?.id,
         ...tokens,
       };
     } catch (error) {

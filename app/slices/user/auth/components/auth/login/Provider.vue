@@ -12,6 +12,7 @@ const login = async (user: { email: string; password: string }) => {
 
   if (authStore.isAuthenticated) {
     await teamStore.init();
+    console.log('teamStore.teams', teamStore.teams);
     if (teamStore.hasTeam) {
       await router.push({ name: pages.teams });
     } else {

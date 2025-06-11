@@ -114,11 +114,7 @@ export class AuthController {
   @Post('register')
   async register(@Body() data: RegisterUserDto): Promise<IUserData> {
     data.roles = [RoleTypes.User];
-    try {
-      return await this.authGateway.register(data);
-    } catch (e) {
-      throw new BadRequestException(e.message);
-    }
+    return await this.authGateway.register(data);
   }
 
   @Public()
@@ -163,12 +159,8 @@ export class AuthController {
   })
   @Get('confirm')
   async confirm(@Query('token') token: string, @Query('email') email: string) {
-    try {
-      await this.authGateway.confirm(token, email);
-      return { message: 'Email confirmed successfully' };
-    } catch (e) {
-      throw new BadRequestException(e.message);
-    }
+    await this.authGateway.confirm(token, email);
+    return { message: 'Email confirmed successfully' };
   }
 
   @Public()
@@ -212,12 +204,8 @@ export class AuthController {
   })
   @Post('resendConfirm')
   async resendConfirm(@Body('email') email: string) {
-    try {
-      await this.authGateway.resendConfirm(email);
-      return { message: 'Confirmation email sent successfully' };
-    } catch (e) {
-      throw new BadRequestException(e.message);
-    }
+    await this.authGateway.resendConfirm(email);
+    return { message: 'Confirmation email sent successfully' };
   }
 
   @Public()
@@ -254,10 +242,6 @@ export class AuthController {
   })
   @Post('refreshToken')
   async refreshToken(@Body('refreshToken') refreshToken: string) {
-    try {
-      return await this.authGateway.refreshToken(refreshToken);
-    } catch (e) {
-      throw new BadRequestException(e.message);
-    }
+    return await this.authGateway.refreshToken(refreshToken);
   }
 }

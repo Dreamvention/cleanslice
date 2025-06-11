@@ -7,7 +7,6 @@ import {
 
 definePageMeta({
   layout: 'teams',
-  public: false,
 });
 
 const teamStore = useTeamStore();

@@ -1,0 +1,48 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# API 
+
+The api folder is responsible for the api endpoints of the application.
+It is build on Clean Architecture and Slice Architecture. The slice folder includes all the features of the app - slices. You must edit only these folders. 
+
+## Code Standards
+1. Never edit files outside the src folder.
+2. Use #Prisma as your source of database types.
+3. Slices must be imported using their # syntax: example: #prisma, #users/teams, #agents etc.
+4. in DTOs never use `@Expose()`
+5. use `import { ToBoolean } from '#core';` to transform boolean.
+6. in every file add tags at the top of the file.
+7. prefer single instead of multiple. example: job instead of jobs, repository instead of repositories.
+8. `ApiProperty` does not require a description
+9. Instead of explicitly typing the `@ApiProperty({ required: false })` you can use the `@ApiPropertyOptional()` short-hand decorator.
+10. Never not put any validation into the controller.
+11. In Data layer, specifically in a gateway, avoid putting try {} catch() {}. Instead, throw an error, that will be caught on the domain service layer.
+12. The Domain/Service layer should not return the formated success:true data format, this is take care of the NESTjs middleware.
+13. When creating a controller, do not put it into a `presentation` folder, leave it in the root of th slice, next to the `dtos` folder.
+
+## Clean Slice Architecture
+
+Every slice consists of several fodomental layers: domain (types, gateway interfaces, services), data (gateways, mappers) and presentation (controllers, dtos). 
+
+### Module setup (root of the slices)
+- Includes the nestjs module.ts file. 
+- May include the prisma schema of the slices module.
+
+### Domain layer (@layer:domain)
+- Types: Entities, Interfaces, Enums (@type:types)
+- Gateway Interfaces (@type:gateway)
+- Services (@type:service)
+
+### Data layer (@layer:data)
+- Gateway Implementations (@type:gateway)
+- Mappers. (@type:mapper)
+The mapper may not containe any async functionality. all the data must be passed as parameters. The mapper functions will never return a promise. 
+- Repositories (@type:repository)
+
+### Presentation layer (@layer:presentation)
+- Contorollers (@type:controller)
+- Dtos (@type:dto)
+

@@ -1,0 +1,81 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# App
+
+## Code standards
+1. the <script lang="ts" setup> always goes before the <template> script
+2. the teamId should always be requested from usersStore.getTeam
+3. you are working with Nuxt, Tailwind and @hey-api/openapi-ts.
+4. In Nuxt you are not required to import vue functions sych as ref, computed etc.
+5. In Nuxt you are not required to import Components from other Slises.
+6. In Nuxt, components are auto-imported - you don't need to import them manually. Just use them directly in your template.
+7. When building a Nuxt slice, always add `nuxt.config.ts`
+example: 
+```js
+// https://nuxt.com/docs/api/configuration/nuxt-config
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const currentDir = dirname(fileURLToPath(import.meta.url));
+
+export default defineNuxtConfig({
+  //https://i18n.nuxtjs.org/guide/layers#merging-locales
+  modules: ['@nuxtjs/i18n'],
+  alias: {
+    '#onboarding': currentDir,
+  },
+  i18n: {
+    langDir: '../locales',
+    locales: [
+      { code: 'en', file: 'en.json' },
+      { code: 'fr', file: 'fr.json' },
+    ],
+  },
+});
+```
+8. When adding `pages.ts` file, simply add the avaliable routes in the current slice. 
+example of pages.ts file
+```js
+export const pages = {
+  home: 'index',
+  login: 'login',
+  register: 'register',
+  profile: 'profile',
+  logout: 'logout',
+  repositories: 'teams-teamId-repositories',
+  repositoriesCreate: 'teams-teamId-repositories-create',
+  repositoriesEdit: 'teams-teamId-repositories-id-edit',
+  repositoriesItem: 'teams-teamId-repositories-id',
+  repositoriesItemJobs: 'teams-teamId-repositories-jobs-repositoryId',
+  privacyPolicy: 'privacy-policy',
+  termsOfUse: 'terms-of-use',
+  confirm: 'confirm',
+  agents: 'teams-teamId-agents',
+};
+```
+9. When creating the Components for a slice, always define the root folder as the and then add inside the Provider.vue component files like this `components/onboarding/Provider.vue`
+10. You are working in nuxt, and in nuxt you do not need to import stores, components and utils. Do not do this `import { useUsersStore } from '#stores/users';`
+
+## Authentication Flow
+1. Use meta properties in pages to control authentication flow:
+   ```vue
+   <script lang="ts" setup>
+   definePageMeta({
+     auth: {
+       public: true,              // Allow access without authentication
+       onlyNotAuthenticated: true, // Only allow non-authenticated users
+       redirect: pages.goToAfterLogin, // Redirect path after login
+     },
+   });
+   </script>
+   ```
+2. Common auth meta patterns:
+   - Public pages (login, register): `{ public: true, onlyNotAuthenticated: true }`
+   - Protected pages: `{ public: false }` (default)
+   - Public pages with auth redirect: `{ public: true, redirect: pages.somePage }`
+3. The `pages` object is auto-imported from `common/utils` and contains all available routes in the application. It must be maintained by the AI assistant whenever a new page is added to any slice. This ensures consistent routing and proper redirect handling across the application.
+4. Always use the `pages` object for redirect paths to maintain consistency
+5. The auth middleware will automatically handle redirects based on these meta properties

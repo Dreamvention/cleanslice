@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Coding standards
+1. Always rely on enum values
+2. In Interfaces where possible create enums

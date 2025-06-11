@@ -63,7 +63,7 @@ export class BasicAuthGateway implements IAuthGateway {
   async register(data: ICreateAuthData & ICreateUserData): Promise<IUserData> {
     const { data: existingUsers } = await this.usersGateway.getUsers({ email: data.email });
     if (existingUsers.length > 0) {
-      throw new UsersErrors.UserExistsError(`User ${data.email} already exists`);
+      throw new UsersErrors.UserExistsError(`User ${data.email} already exists`, { cause: Error('eee') });
     }
 
     // Generate confirmation token

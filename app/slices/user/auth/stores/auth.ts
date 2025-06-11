@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia';
-import { AuthService, AuthDto } from '#api/data';
+import { AuthDto, LoginUserDto, RegisterUserDto, AuthService } from '#api/data';
 import { useCookie } from '#app';
+import { useErrorStore } from '@/slices/setup/error/stores/error';
 
-export const authCookieName = process.env.AUTH_COOKIE_NAME || 'AUTH';
+// Constants
+const AUTH_COOKIE_NAME = process.env.AUTH_COOKIE_NAME || 'auth';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -11,93 +13,169 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
-    getAuth: (state) => {
-      return state.auth;
+    isAuthenticated: (state): boolean => Boolean(state.auth?.accessToken),
+    getToken: (state): string | null => state.auth?.accessToken || null,
+    getRefreshToken: (state): string | null => state.auth?.refreshToken || null,
+    getStatus(state): 'authenticated' | 'unauthenticated' | 'loading' {
+      if (state.loading) return 'loading';
+      if (this.isAuthenticated) return 'authenticated';
+      return 'unauthenticated';
     },
-    isAuthenticated: (state) => {
-      return !!state.auth?.accessToken;
-    },
-    isLoading: (state) => state.loading,
   },
+
   actions: {
-    authenticate(auth: AuthDto) {
+    // Initialization
+    init(): void {
+      this.loadFromCookie();
+    },
+
+    // State management
+    setAuth(auth: AuthDto) {
       this.auth = auth;
-      const authCookie = useCookie(authCookieName);
-      authCookie.value = JSON.stringify(auth);
+      this.saveToCookie();
       handleApiAuthentication(auth.accessToken);
     },
 
-    async init() {
-      console.log('auth init start...');
-      this.loading = true;
-      const authCookie = useCookie<AuthDto | null>(authCookieName, {
-        default: () => null,
-      });
-      this.auth = authCookie.value;
-      if (this.isAuthenticated) {
-        handleApiAuthentication(this.auth?.accessToken);
-      }
-      this.loading = false;
-      console.log('auth init finished...');
-    },
-
-    async refreshToken() {
+    // Cookie management
+    saveToCookie(): void {
       try {
-        this.loading = true;
-        if (this.auth && !!this.auth.refreshToken) {
-          const response = await AuthService.refreshToken({
-            body: {
-              refreshToken: this.auth.refreshToken,
-            },
-          });
-          if (response.data?.data) {
-            this.authenticate(response.data.data);
-          } else {
-            this.logout();
-          }
-        }
-        this.loading = false;
+        if (!this.auth) return;
+        const data: AuthDto = this.auth;
+        const cookie = useCookie(AUTH_COOKIE_NAME, {
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          secure: true,
+          sameSite: 'strict',
+        });
+        cookie.value = JSON.stringify(data);
       } catch (error) {
-        this.logout();
-        this.loading = false;
+        const errorStore = useErrorStore();
+        errorStore.setAuthError('auth_cookie_save', 'Failed to save authentication data', { error });
       }
     },
 
-    async login(email: string, password: string) {
+    loadFromCookie(): void {
       try {
-        this.loading = true;
-        const response = await AuthService.login({ body: { email, password, deviceId: 'app' } });
+        const cookie = useCookie<AuthDto>(AUTH_COOKIE_NAME);
+        if (!cookie.value) return;
 
-        if (response.data?.data?.accessToken) {
-          this.authenticate(response.data.data);
-        }
-        return response;
-        this.loading = false;
-      } catch (e) {
-        console.log(e);
-        this.loading = false;
+        this.setAuth(cookie.value);
+      } catch (error) {
+        const errorStore = useErrorStore();
+        errorStore.setAuthError('auth_cookie_load', 'Failed to load authentication data', { error });
+        this.clearCookie();
       }
     },
 
-    async register(name: string, email: string, password: string) {
+    clearCookie(): void {
+      try {
+        const cookie = useCookie(AUTH_COOKIE_NAME);
+        cookie.value = null;
+      } catch (error) {
+        const errorStore = useErrorStore();
+        errorStore.setAuthError('auth_cookie_clear', 'Failed to clear authentication data', { error });
+      }
+    },
+
+    // Authentication methods
+    async login(credentials: LoginUserDto): Promise<boolean> {
+      const errorStore = useErrorStore();
+      try {
+        const response = await AuthService.login({
+          body: { ...credentials },
+        });
+        const authData = response.data?.data;
+        if (!authData) {
+          errorStore.setAuthError('auth_login', 'Invalid login response');
+          return false;
+        }
+
+        this.setAuth(authData);
+        navigateTo(pages.goToAfterLogin);
+        return true;
+      } catch (e) {
+        errorStore.setApiError('auth_login', e, 'Failed to login');
+        return false;
+      }
+    },
+
+    async register(credentials: RegisterUserDto): Promise<boolean> {
+      const errorStore = useErrorStore();
       try {
         await AuthService.register({
-          body: { name, email, password, deviceId: 'app' },
+          body: { ...credentials, deviceId: 'app' },
         });
+
+        navigateTo(pages.goToAfterRegister);
+        return true;
       } catch (e) {
-        console.log(e);
+        errorStore.setApiError('auth_register', e, 'Failed to register');
+        return false;
       }
     },
 
-    async logout() {
-      handleAccountLogout();
+    logout(): void {
       this.auth = null;
+      this.clearCookie();
+      handleApiAuthentication();
     },
 
-    async resendConfirm(email: string) {
-      await AuthService.resendConfirmation({
-        body: { email: email },
-      });
+    async refreshToken(): Promise<boolean> {
+      const errorStore = useErrorStore();
+      if (!this.auth?.refreshToken) {
+        errorStore.setAuthError('auth_refresh', 'No refresh token available');
+        return false;
+      }
+
+      try {
+        const response = await AuthService.refreshToken({
+          body: { refreshToken: this.auth?.refreshToken },
+        });
+        const authData = response.data?.data;
+        if (!authData) {
+          errorStore.setAuthError('auth_refresh', 'Invalid refresh response');
+          return false;
+        }
+
+        this.setAuth(authData);
+        return true;
+      } catch (e) {
+        errorStore.setApiError('auth_refresh', e, 'Failed to refresh token');
+        this.logout();
+        return false;
+      }
+    },
+
+    async resendConfirmation(email: string): Promise<boolean> {
+      const errorStore = useErrorStore();
+      try {
+        await AuthService.resendConfirmation({
+          body: { email },
+        });
+        return true;
+      } catch (e) {
+        errorStore.setApiError('auth_resend_confirmation', e, 'Failed to resend confirmation email');
+        return false;
+      }
+    },
+
+    // Token management
+    async ensureValidToken(): Promise<boolean> {
+      const errorStore = useErrorStore();
+      if (!this.auth?.accessToken) return false;
+
+      try {
+        const payload = JSON.parse(atob(this.auth?.accessToken?.split('.')[1] || ''));
+        const isExpired = Date.now() >= payload.exp * 1000;
+
+        if (isExpired) {
+          return await this.refreshToken();
+        }
+
+        return true;
+      } catch {
+        errorStore.setAuthError('auth_token', 'Invalid token');
+        return false;
+      }
     },
   },
 });

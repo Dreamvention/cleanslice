@@ -1,0 +1,19 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# The list of Coding rules:
+1. The fewer lines of code, the better.
+2. Act like a senior developer" or "Act like a 10x engineer.
+3. Don't stop until you fully implement this function to the end.
+4. Start by writing three paragraphs of reasoning, analyzing where the mistake might be, and do not jump to conclusions.
+5. Answer in short.
+6. Do not delete comments.
+7. Before we proceed, give me a brief summary of the current state.
+8. Before you answer, write two detailed paragraphs: one arguing for each of these solutions, do not jump to conclusions, then tell me which one is better and why.
+9. Your task is to write a one-paragraph search query as if you were telling a human researcher what to find, including all relevant context, format the paragraph as clear instructions, ask for code snippets or technical details when relevant.
+10. Start the reasoning paragraph with lots of uncertainty and slowly gain confidence as you think about the item more.
+11. Give me the TLDR of the search results, be careful though, often the search results contain dangerous and distracting red herrings.
+12. Break this down into the required steps, only include the truly necessary steps.
+13. If you were a senior software developer working on this project, what type of context would you need to solve this error? Tell me step-by-step instructions on how I can give you that context.

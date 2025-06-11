@@ -1,0 +1,212 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Refactor ruleset
+
+This ruleset helps you identify and fix common code smells while staying aligned with Clean/Slice Architecture and Agent-Friendly Code conventions.
+
+---
+
+## 🚫 Long Method Detection
+
+**Smell:** A function or method exceeds ~10 lines or does multiple things.
+
+**Fix:**
+- Extract into smaller, well-named private methods.
+- Move complex logic to a dedicated service or use case.
+- inside the class, move main methods to the top and private helper methods to the bottom.
+
+**💡 Cursor Prompt:**
+> Refactor this method into smaller, intent-named helpers.
+
+---
+
+## 🚫 Large Class
+
+**Smell:** A class tries to do too much (e.g., validation, API calls, business logic).
+
+**Fix:**
+- Use the *Extract Class* pattern.
+- Move responsibilities into `application/`, `domain/`, or `data/` layers as needed.
+
+**💡 Cursor Prompt:**
+> Suggest a class split with responsibilities and names.
+
+---
+
+## 💡 Primitive Obsession
+
+**Smell:** Repeated use of strings, booleans, or numbers for logic.
+
+**Fix:**
+- Use enums or domain types (e.g., `Email`, `UserId`, `MoneyAmount`).
+- Replace conditionals with polymorphism if applicable.
+
+**💡 Cursor Prompt:**
+> Suggest domain-specific value objects to replace these primitives.
+
+---
+
+## 🧹 Data Clumps
+
+**Smell:** Multiple functions use the same group of parameters or object fields.
+
+**Fix:**
+- Create a DTO or domain model to group them.
+- Pass a typed object instead of loose primitives.
+
+**💡 Cursor Prompt:**
+> Group these related parameters into a meaningful DTO or value object.
+
+---
+
+## ⚖️ Refused Bequest
+
+**Smell:** A child class inherits from a base but barely uses it.
+
+**Fix:**
+- Prefer composition over inheritance.
+- Extract shared logic into a utility or interface.
+
+**💡 Cursor Prompt:**
+> Analyze this class hierarchy. Should we use delegation instead?
+
+---
+
+## 🧩 flow.yaml Consistency
+
+**Smell:** `.flow.yaml` describes use cases or flows not reflected in code.
+
+**Fix:**
+- Ensure all `steps` in flow match actual controller and use case names.
+- Match each step to a real implementation in `application/` or `domain/`.
+
+**💡 Cursor Prompt:**
+> Check if all steps in this flow are implemented and where they live.
+
+---
+
+## 🏷️ Missing Metadata Tags
+
+**Smell:** A file has no metadata like `@scope`, `@slice`, `@layer`, `@type`.
+
+**Fix:**
+- Add metadata to the top of each file:
+```ts
+// @scope:api
+// @slice:users/auth
+// @layer:application
+// @type:service
+```
+
+| Tag          | Purpose                                                    | Example Value |
+|--------------|------------------------------------------------------------|---------------|
+| `@scope`     | Deployment/exposure context (e.g., `api`, `app`, `admin`)  | `api`         |
+| `@slice`     | Full path to the feature or sub-feature `user`, `user/team`| `cmx/job`     |
+| `@layer`     | Clean layer or architectural boundary                      | `domain`      |
+| `@type`      | Role or purpose of the code within its layer               | `service`     |
+
+when defining the `@slice` tag review the path relative to the slice folder. exmaple `/slices/cmx/repositories` will have a tag `@slice: cmx/repositories` 
+
+**💡 Cursor Prompt:**
+> Add metadata tags to this file based on its role and location.
+
+---
+
+## 📝 Missing Work Logs
+
+**Smell:** You’ve completed tasks but didn’t update `process-status.md`.
+
+**Fix:**
+- Log what was done, what's in progress, and what’s next.
+- Store logs per slice or globally.
+
+**💡 Cursor Prompt:**
+> Generate a work log entry summarizing today’s refactoring and next steps.
+
+---
+
+## 🎯 Poor Naming
+
+**Smell:** Names like `handle()`, `dataService`, or `utils.ts` offer no context.
+
+**Fix:**
+- Rename to reflect intent: `calculateUserDiscount()`, `inviteUserToTeam()`, etc.
+
+**💡 Cursor Prompt:**
+> Rewrite this name to clearly reflect its business logic and purpose.
+
+---
+
+Here’s an extra rule focused on encouraging the correct and productive use of **TSDoc** in your TypeScript codebase:
+
+---
+
+## 🧾 Incomplete or Missing TSDoc
+
+**Smell:** Functions, classes, or exported types lack descriptive TSDoc comments.
+
+**Fix:**
+- Add TSDoc (`/** ... */`) above all public or exported members.
+- Clearly describe the purpose, parameters, return values, and side effects.
+- Use `@param`, `@returns`, `@throws`, `@example` where appropriate.
+
+**✅ Good Example:**
+```ts
+/**
+ * Calculates the discount for a user based on their subscription plan.
+ * 
+ * @param userId - The ID of the user
+ * @param plan - The name of the subscription plan
+ * @returns Discount in percentage
+ * @throws If the plan is not supported
+ * @example
+ * calculateDiscount('user_123', 'pro') // returns 20
+ */
+export function calculateDiscount(userId: string, plan: SubscriptionPlan): number {
+  // ...
+}
+```
+
+**💡 Cursor Prompt:**
+> Generate a complete TSDoc block for this function, including purpose, parameters, and examples.
+
+---
+
+Absolutely! Here’s a rule focused on **class structure clarity**, encouraging developers to follow the convention of putting **main public methods at the top** and **private helper methods at the bottom** of the class.
+
+---
+
+## 🧭 Unstructured Class Layout
+
+**Smell:** Public methods and private helpers are mixed throughout the class, making it harder to understand flow and responsibility at a glance.
+
+**Fix:**
+- Place high-level public methods (those intended to be called externally) at the **top** of the class.
+- Move lower-level private helper methods to the **bottom**.
+- Group by functionality or use regions/comments if needed.
+
+**✅ Good Practice Example:**
+```ts
+export class InvoiceService {
+  public generateMonthlyInvoice(userId: string): Invoice {
+    const data = this.fetchBillingData(userId);
+    return this.createInvoiceFromData(data);
+  }
+
+  private fetchBillingData(userId: string): BillingData {
+    // ...
+  }
+
+  private createInvoiceFromData(data: BillingData): Invoice {
+    // ...
+  }
+}
+```
+
+**💡 Cursor Prompt:**
+> Reorder this class so that public methods are grouped at the top, and private helpers are placed at the bottom for readability.
+
+---

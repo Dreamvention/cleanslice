@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{ loading: boolean }>();
-const emit = defineEmits<{ (e: 'submit', data: { email: string; password: string }): void }>();
+const emit = defineEmits<{ (e: 'submit', data: { name: string; email: string; password: string }): void }>();
 const formData = ref({
   name: '',
   email: '',

@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: 'auth',
-  public: true,
-  onlyNotAuthenticated: true,
+  auth: {
+    public: true,
+    onlyNotAuthenticated: true,
+    redirect: pages.goToAfterLogin,
+  },
 });
 </script>
 

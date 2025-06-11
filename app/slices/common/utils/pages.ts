@@ -1,4 +1,7 @@
 export const pages = {
+  goToAfterLogin: 'teams',
+  goToAfterRegister: 'confirm',
+  goToNotAuthanticated: 'login',
   home: 'index',
   dashboard: 'dashboard',
   logout: 'logout',

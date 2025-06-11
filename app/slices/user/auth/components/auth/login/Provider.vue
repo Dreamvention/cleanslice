@@ -1,25 +1,7 @@
 <script lang="ts" setup>
-import { useToast } from '#theme/components/ui/toast/use-toast';
 const authStore = useAuthStore();
-const teamStore = useTeamStore();
-const router = useRouter();
-const { toast } = useToast();
-const loading = ref(false);
-
-const login = async (user: { email: string; password: string }) => {
-  loading.value = true;
-  await authStore.login(user.email, user.password);
-
-  if (authStore.isAuthenticated) {
-    await teamStore.init();
-    console.log('teamStore.teams', teamStore.teams);
-    if (teamStore.hasTeam) {
-      await router.push({ name: pages.teams });
-    } else {
-      await router.push({ name: pages.teamsCreate });
-    }
-  }
-  loading.value = false;
+const login = async (data: { email: string; password: string }) => {
+  await authStore.login({ ...data, deviceId: 'app' });
 };
 </script>
 
@@ -32,7 +14,7 @@ const login = async (user: { email: string; password: string }) => {
       <h1 class="text-2xl font-semibold tracking-tight">Login to your Account</h1>
       <p class="text-sm text-muted-foreground">Enter your email and password to sign in</p>
     </div>
-    <AuthLoginForm @submit="login" :loading="loading" />
+    <AuthLoginForm @submit="login" :loading="authStore.loading" />
     <!-- <div class="mt-3">Don't have an account? <NuxtLink :to="{ name: pages.register }">Register</NuxtLink></div> -->
     <p class="px-8 text-center text-sm text-muted-foreground">
       Don't have an account?

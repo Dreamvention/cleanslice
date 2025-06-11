@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 definePageMeta({
-  layout: 'home',
-  auth: {
-    public: true,
-  },
+  public: false,
 });
 </script>
-
 <template>
-  <HomeProvider />
+  chat
+
+  <ChatProvider />
 </template>

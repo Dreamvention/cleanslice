@@ -18,7 +18,6 @@ export class ErrorHandlingInterceptor implements NestInterceptor {
             : HttpStatus.INTERNAL_SERVER_ERROR;
         const message = error.response?.message || error.message || 'An unexpected error occurred';
         const errorCode = error.code || 'UNEXPECTED_ERROR';
-
         // Standardize error response
         const errorResponse = {
           code: errorCode,

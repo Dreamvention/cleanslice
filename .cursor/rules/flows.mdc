@@ -1,0 +1,150 @@
+---
+description: when writing flows
+globs: 
+alwaysApply: false
+---
+Excellent — this is a crucial topic. Let me give you a structured explanation you could later turn into a book section.
+
+---
+
+## 💡 Understanding `flow.yaml` in Clean/Slice Architecture (Agent-Friendly Context)
+
+### ✅ What is `flow.yaml`?
+
+In **Agent-Friendly Code**, a `flow.yaml` is a lightweight, declarative file that describes **business flows**, **use case narratives**, or **processes** in a way that both humans and AI can understand.
+
+It is **not** a substitute for code—it is a complement.
+
+It gives AI and developers a shared, high-level map of:
+- Actors (users, services, agents)
+- Steps (use cases, conditions, external calls)
+- Inputs/Outputs
+- Expected side effects
+- Metadata for documentation and testing
+
+---
+
+### ✅ Where to use `flow.yaml`
+
+In **Clean/Slice** Architecture, you typically put a `flow.yaml` file in the root of a slice or a sub-slice.
+
+Example:
+
+```
+src/slices/users/
+├── application/
+├── domain/
+├── data/
+├── dtos/
+├── users.controller.ts
+├── users.module.ts
+├── users.flow.yaml   <-- belongs here
+└── index.ts
+```
+
+Or if you have nested domains:
+
+```
+src/slices/users/teams/
+├── application/
+├── domain/
+├── teams.flow.yaml
+```
+
+**Rule of Thumb**:
+- Each meaningful **feature**, **slice**, or **bounded context** should have its own `<slicename>.flow.yaml`.
+- Avoid putting one big `flows.yaml` at the root of the project unless you really need a system-wide overview.
+
+---
+
+### ✅ When to use `flow.yaml`
+
+Use it when:
+- Designing or implementing a **new feature** or **use case**
+- Explaining a **narrative** for business rules
+- Mapping **processes** that span multiple use cases or services
+- Providing context for AI agents (Cursor, GPTs, CI bots)
+- Onboarding new developers
+
+In short: **whenever there is a flow** (even simple ones), documenting it gives clarity and AI leverage.
+
+---
+
+### ✅ How to use `flow.yaml`
+
+Here's a minimal pattern you can adopt:
+
+```yaml
+name: Invite User to Team
+description: Handles user invitations via email
+
+actors:
+  - User
+  - System
+
+steps:
+  - validate team exists
+  - check if user is already invited
+  - create invitation
+  - send email notification
+  - log audit event
+
+inputs:
+  - teamId: string
+  - email: string
+
+outputs:
+  - success: boolean
+  - errors: optional
+```
+
+Advanced example:
+
+```yaml
+name: Get Users By Role
+description: Returns users matching the provided roles and filters.
+
+actors:
+  - Admin
+
+useCases:
+  - GetTeamByIdUseCase
+  - GetUsersByRoleUseCase
+  - SendAuditLogUseCase
+
+inputs:
+  - teamId: string
+  - roles: string[]
+
+outputs:
+  - users: User[]
+```
+
+---
+
+### ✅ Benefits in Agent-Friendly Architecture
+
+- **AI agents** (e.g., Cursor, Windserf, GPTs) can use these flows as prompts automatically.
+- **Developers** get a clear overview of what's going on without reading all the code.
+- **CI** can even validate that every `flow.yaml` is referenced and covered by use cases + tests.
+- Enables **automatic generation** of:
+   - Test skeletons
+   - Documentation pages
+   - Input/Output contracts
+
+---
+
+### ✅ Best Practices
+
+| Principle | Recommendation |
+|-----------|----------------|
+| Granularity | Use one `flow.yaml` per feature or major sub-feature |
+| Metadata | Link actors, inputs, outputs, and steps clearly |
+| AI Readability | Keep it simple, declarative, and natural language friendly |
+| Synchronization | Update it when flows change during development |
+
+---
+
+If you want, I can turn this into a **full Chapter draft** in Markua with examples, patterns, and tips for your book.
+
+Just say *yes* and I will make it production-ready right now.

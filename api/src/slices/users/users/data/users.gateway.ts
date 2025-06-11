@@ -46,9 +46,9 @@ export class UsersGateway implements IUsersGateway {
       data: results.map((result) => this.map.toData(result)),
       meta: {
         total: total,
-        lastPage: total / filter.perPage + (total % filter.perPage) > 0 ? 1 : 0,
-        currentPage: filter.page ?? 1,
-        perPage: filter.perPage ?? 20,
+        lastPage: Math.ceil(total / (filter?.perPage ?? 20)),
+        currentPage: filter?.page ?? 1,
+        perPage: filter?.perPage ?? 20,
       },
     };
   }

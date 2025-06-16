@@ -12,7 +12,7 @@ export abstract class IUsersGateway {
 export interface IUsersFilter {
   search?: string;
   ids?: string[];
-  email: string;
+  email?: string;
   page?: number;
   perPage?: number;
 }

@@ -10,7 +10,6 @@ import { experimental_createMCPClient, streamText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { CompletionDto } from './dtos';
 import { Public } from '#user/auth/public.decorator';
-import { randomUUID } from 'crypto';
 
 @ApiTags('ai/completion')
 @Controller('ai/completion')
@@ -20,54 +19,51 @@ export class CompletionController {
     operationId: 'generateCompletion',
   })
   @ApiBody({ type: CompletionDto })
-  @ApiResponse({ status: 200, description: 'Streaming AI completion response' })
-  @ApiResponse({ status: 500, description: 'Internal server error' })
+  @ApiResponse({
+    status: 200,
+    description: 'Streaming AI completion response',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
   @Public()
   @Post()
   async generateCompletion(@Body() data: CompletionDto, @Res() res: Response) {
-    // Handle both messages array and direct prompt
-    const prompt = data.messages
-      ? Array.isArray(data.messages)
-        ? data.messages[data.messages.length - 1]?.content
-        : data.messages
-      : data.prompt;
+    const prompt = Array.isArray(data.messages) ? data.messages[data.messages.length - 1].content : data.messages;
+
+    // const { messages } = data;
 
     try {
-      const sseClient = await experimental_createMCPClient({
-        transport: {
-          type: 'sse',
-          url: 'http://localhost:3333/sse',
+      // const sseClient = await experimental_createMCPClient({
+      //   transport: {
+      //     type: 'sse',
+      //     url: 'http://localhost:3333/sse',
+      //   },
+      // });
+
+      // const tools = await sseClient.tools();
+      const response = await streamText({
+        model: openai('gpt-4o'),
+        // tools,
+        prompt,
+        onFinish: async () => {
+          // await sseClient.close();
+        },
+        onError: async (error) => {
+          // await sseClient.close();
         },
       });
 
-      const toolSetTwo = await sseClient.tools();
-
-      const tools = {
-        ...toolSetTwo, // note: this approach causes subsequent tool sets to override tools with the same name
-      };
-
-      const response = await streamText({
-        model: openai('gpt-4o'),
-        tools,
-        prompt,
+      return response.pipeUIMessageStreamToResponse(res, {
+        onError: (error) => {
+          // Error messages are masked by default for security reasons.
+          // If you want to expose the error message to the client, you can do so here:
+          return error instanceof Error ? error.message : String(error);
+        },
       });
-
-      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
-
-      for await (const chunk of response.textStream) {
-        console.log(chunk);
-        // Send JSON-encoded text chunk in AI SDK format
-        res.write(`0:${JSON.stringify(chunk)}\n`);
-      }
-
-      // Send finish message
-      res.write(`d:${JSON.stringify({ finishReason: 'stop' })}\n`);
-      res.end();
     } catch (error) {
-      console.error('Internal error:', error);
-      res.status(500).send('Internal Server Error');
+      return new Response('Internal Server Error', { status: 500 });
     }
   }
 }

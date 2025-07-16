@@ -1,0 +1,18 @@
+import { User } from "../user/user"
+import { ApiKey } from "../apiKey/apiKey"
+import { File } from "../../files/files"
+import { TeamUser } from "../teamUser/teamUser"
+
+model Team {
+  id        String   @id
+  codename  String   @default("")
+  name      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  apiKeys   ApiKey[]
+  files     File[]
+  teamUsers TeamUser[]
+}

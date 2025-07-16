@@ -79,3 +79,22 @@ export const pages = {
 3. The `pages` object is auto-imported from `common/utils` and contains all available routes in the application. It must be maintained by the AI assistant whenever a new page is added to any slice. This ensures consistent routing and proper redirect handling across the application.
 4. Always use the `pages` object for redirect paths to maintain consistency
 5. The auth middleware will automatically handle redirects based on these meta properties
+
+## Folder Structure Organization
+1. Before adding any new files or components, always review the existing folder structure to identify the appropriate location
+2. The application follows a slice-based architecture where slices can contain subslices:
+   - Main slices are located in `app/slices/`
+   - Example: `user` slice contains subslices like `team`, `auth`, `account`, and `apiKey`
+3. When adding new functionality:
+   - First identify if it belongs to an existing slice
+   - If it's related to an existing slice, add it as a subslice or component within that slice
+   - Only create a new top-level slice if the functionality is truly independent and doesn't fit within existing slices
+4. Common slice organization:
+   - `user/` - Contains all user-related functionality (auth, team, account, etc.)
+   - `common/` - Shared components and utilities
+   - `dashboard/` - Dashboard-related features
+   - `site/` - Site-wide features
+   - `chat/` - Chat functionality
+   - `files/` - File management features
+   - `setup/` - Setup and configuration features
+5. When in doubt about where to place new functionality, prefer adding it to an existing slice rather than creating a new one

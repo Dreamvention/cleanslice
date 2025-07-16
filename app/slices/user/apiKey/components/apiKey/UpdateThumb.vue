@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ApiKeysService, UpdateApiKeyDto } from '#api';
+import { ApiKeyService, UpdateApiKeyDto } from '#api';
 
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
@@ -24,7 +24,7 @@ const open = computed({
 const _loading = ref(false);
 
 const { data, pending, error, refresh } = useAsyncData('apiKey', () =>
-  ApiKeysService.getApiKey({ id: route.params.id as string }),
+  ApiKeyService.getApiKey({ path: { id: route.params.id as string } }),
 );
 
 const formSchema = toTypedSchema(
@@ -44,7 +44,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       name: values.name,
     } as UpdateApiKeyDto;
 
-    const result = await ApiKeysService.updateApiKey({ id: route.params.id as string, requestBody });
+    const result = await ApiKeyService.updateApiKey({ path: { id: route.params.id as string }, body: requestBody });
 
     emits('update', result);
     _loading.value = false;

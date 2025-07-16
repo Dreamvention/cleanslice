@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ApiKeysService } from '#api';
+import { ApiKeyService } from '#api';
 
 const app = useNuxtApp();
 const route = useRoute();
 
-const { data, pending, error, refresh } = useAsyncData('apiKeys', () => ApiKeysService.getApiKeys());
+const { data, pending, error, refresh } = useAsyncData('apiKeys', () =>
+  ApiKeyService.getApiKeys({ query: { teamId: route.params.teamId as string } }),
+);
 
 const handleDelete = async (id: string) => {
-  await ApiKeysService.deleteApiKey({ id });
+  await ApiKeyService.deleteApiKey({ path: { id } });
   refresh();
 };
 

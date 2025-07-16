@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 // import { SlicesModule } from './registerSlices';
 import { FilesModule } from './slices/files/files.module';
-import { UsersModule } from './slices/users/users.module';
+import { UserModule } from './slices/user/user.module';
 import { HealthModule } from './slices/health/health.module';
+import { AiModule } from './slices/ai/ai.module';
 // import { RedisModule } from './slices/redis/redis.module';
 @Module({
   imports: [
@@ -12,8 +13,9 @@ import { HealthModule } from './slices/health/health.module';
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     FilesModule,
-    UsersModule,
+    UserModule,
     HealthModule,
+    AiModule,
     // RedisModule,
   ],
 })

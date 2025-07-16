@@ -2,14 +2,17 @@ import { defineStore } from 'pinia';
 import { AuthDto, LoginUserDto, RegisterUserDto, AuthService } from '#api/data';
 import { useCookie } from '#app';
 import { useErrorStore } from '@/slices/setup/error/stores/error';
+import { watch } from 'vue';
 
 // Constants
 const AUTH_COOKIE_NAME = process.env.AUTH_COOKIE_NAME || 'auth';
+const PUBLIC_PATHS = ['/login', '/register', '/forgot-password', '/reset-password'];
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     auth: null as null | AuthDto,
     loading: false,
+    isValidating: false,
   }),
 
   getters: {
@@ -17,7 +20,7 @@ export const useAuthStore = defineStore('auth', {
     getToken: (state): string | null => state.auth?.accessToken || null,
     getRefreshToken: (state): string | null => state.auth?.refreshToken || null,
     getStatus(state): 'authenticated' | 'unauthenticated' | 'loading' {
-      if (state.loading) return 'loading';
+      if (state.loading || state.isValidating) return 'loading';
       if (this.isAuthenticated) return 'authenticated';
       return 'unauthenticated';
     },
@@ -27,6 +30,54 @@ export const useAuthStore = defineStore('auth', {
     // Initialization
     init(): void {
       this.loadFromCookie();
+      this.setupAuthWatcher();
+    },
+
+    setupAuthWatcher(): void {
+      // Watch for auth state changes
+      watch(
+        () => this.auth,
+        async (newAuth) => {
+          if (!newAuth) {
+            this.handleAuthLoss();
+            return;
+          }
+
+          // Validate token on auth state change
+          const isValid = await this.validateToken();
+          if (!isValid) {
+            this.handleAuthLoss();
+          }
+        },
+        { immediate: true },
+      );
+    },
+
+    async validateToken(): Promise<boolean> {
+      if (!this.auth?.accessToken) return false;
+
+      try {
+        const payload = JSON.parse(atob(this.auth.accessToken.split('.')[1] || ''));
+        const isExpired = Date.now() >= payload.exp * 1000;
+
+        if (isExpired) {
+          return await this.refreshToken();
+        }
+
+        return true;
+      } catch {
+        return false;
+      }
+    },
+
+    handleAuthLoss(): void {
+      const route = useRoute();
+      // Don't redirect if we're already on a public path
+      if (PUBLIC_PATHS.includes(route.path)) return;
+
+      // Clear auth state and redirect to login
+      this.logout();
+      navigateTo(pages.login);
     },
 
     // State management
@@ -114,9 +165,9 @@ export const useAuthStore = defineStore('auth', {
     },
 
     logout(): void {
-      this.auth = null;
       this.clearCookie();
       handleApiAuthentication();
+      // this.auth = null; // TODO: remove this because it caused a loop
     },
 
     async refreshToken(): Promise<boolean> {
@@ -126,13 +177,18 @@ export const useAuthStore = defineStore('auth', {
         return false;
       }
 
+      // Store the refresh token before making the request
+      const refreshToken = this.auth.refreshToken;
+
       try {
         const response = await AuthService.refreshToken({
-          body: { refreshToken: this.auth?.refreshToken },
+          body: { refreshToken },
         });
         const authData = response.data?.data;
+
         if (!authData) {
           errorStore.setAuthError('auth_refresh', 'Invalid refresh response');
+          this.logout(); // Only logout if refresh fails
           return false;
         }
 
@@ -140,7 +196,7 @@ export const useAuthStore = defineStore('auth', {
         return true;
       } catch (e) {
         errorStore.setApiError('auth_refresh', e, 'Failed to refresh token');
-        this.logout();
+        this.logout(); // Only logout if refresh fails
         return false;
       }
     },
@@ -160,22 +216,48 @@ export const useAuthStore = defineStore('auth', {
 
     // Token management
     async ensureValidToken(): Promise<boolean> {
+      if (this.isValidating) return false;
+
+      this.isValidating = true;
       const errorStore = useErrorStore();
-      if (!this.auth?.accessToken) return false;
 
       try {
-        const payload = JSON.parse(atob(this.auth?.accessToken?.split('.')[1] || ''));
-        const isExpired = Date.now() >= payload.exp * 1000;
+        if (!this.auth?.accessToken) {
+          this.handleAuthLoss();
+          return false;
+        }
 
-        if (isExpired) {
-          return await this.refreshToken();
+        const isValid = await this.validateToken();
+        if (!isValid) {
+          this.handleAuthLoss();
+          return false;
         }
 
         return true;
       } catch {
         errorStore.setAuthError('auth_token', 'Invalid token');
+        this.handleAuthLoss();
         return false;
+      } finally {
+        this.isValidating = false;
       }
     },
   },
 });
+
+// Setup global auth middleware
+export const setupAuthMiddleware = () => {
+  const auth = useAuthStore();
+  const route = useRoute();
+
+  // Validate token on route changes
+  watch(
+    () => route.path,
+    async () => {
+      if (!PUBLIC_PATHS.includes(route.path)) {
+        await auth.ensureValidToken();
+      }
+    },
+    { immediate: true },
+  );
+};

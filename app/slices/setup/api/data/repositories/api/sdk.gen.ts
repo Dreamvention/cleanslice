@@ -8,6 +8,7 @@ import {
 } from '@hey-api/client-axios';
 import type {
   UploadFileData,
+  UploadFileResponse,
   GetSignedUrlData,
   GetSignedUrlResponse,
   GetFilesData,
@@ -65,7 +66,15 @@ import type {
   MailControllerHandleMailBouncesData,
   MailControllerHandleMailComplaintsData,
   MailControllerHandleMailDeliveriesData,
-  GetHealthData,
+  CheckHealthData,
+  CheckHealthResponse,
+  GenerateCompletionData,
+  CompletionControllerGenerateCompletionData,
+  SseControllerSseData,
+  SseControllerMessagesData,
+  StreamableHttpControllerHandleDeleteRequestData,
+  StreamableHttpControllerHandleGetRequestData,
+  StreamableHttpControllerHandlePostRequestData,
 } from './types.gen';
 import { client as _heyApiClient } from './client.gen';
 
@@ -88,12 +97,12 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export class FilesService {
   /**
-   * Upload a File
+   * Upload a file
    */
   public static uploadFile<ThrowOnError extends boolean = false>(options: Options<UploadFileData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+    return (options.client ?? _heyApiClient).post<UploadFileResponse, unknown, ThrowOnError>({
       ...formDataBodySerializer,
-      url: '/teams/{teamId}/files/upload',
+      url: '/files/upload',
       ...options,
       headers: {
         'Content-Type': null,
@@ -107,7 +116,7 @@ export class FilesService {
    */
   public static getSignedUrl<ThrowOnError extends boolean = false>(options: Options<GetSignedUrlData, ThrowOnError>) {
     return (options.client ?? _heyApiClient).get<GetSignedUrlResponse, unknown, ThrowOnError>({
-      url: '/teams/{teamId}/files/signedUrl',
+      url: '/files/signedUrl',
       ...options,
     });
   }
@@ -115,9 +124,9 @@ export class FilesService {
   /**
    * Get all Files
    */
-  public static getFiles<ThrowOnError extends boolean = false>(options: Options<GetFilesData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).get<GetFilesResponse, unknown, ThrowOnError>({
-      url: '/teams/{teamId}/files',
+  public static getFiles<ThrowOnError extends boolean = false>(options?: Options<GetFilesData, ThrowOnError>) {
+    return (options?.client ?? _heyApiClient).get<GetFilesResponse, unknown, ThrowOnError>({
+      url: '/files',
       ...options,
     });
   }
@@ -127,7 +136,7 @@ export class FilesService {
    */
   public static createFile<ThrowOnError extends boolean = false>(options: Options<CreateFileData, ThrowOnError>) {
     return (options.client ?? _heyApiClient).post<CreateFileResponse, unknown, ThrowOnError>({
-      url: '/teams/{teamId}/files',
+      url: '/files',
       ...options,
       headers: {
         'Content-Type': 'application/json',
@@ -141,7 +150,7 @@ export class FilesService {
    */
   public static deleteFile<ThrowOnError extends boolean = false>(options: Options<DeleteFileData, ThrowOnError>) {
     return (options.client ?? _heyApiClient).delete<DeleteFileResponse, unknown, ThrowOnError>({
-      url: '/teams/{teamId}/files/{id}',
+      url: '/files/{id}',
       ...options,
     });
   }
@@ -151,7 +160,7 @@ export class FilesService {
    */
   public static getFile<ThrowOnError extends boolean = false>(options: Options<GetFileData, ThrowOnError>) {
     return (options.client ?? _heyApiClient).get<GetFileResponse, unknown, ThrowOnError>({
-      url: '/teams/{teamId}/files/{id}',
+      url: '/files/{id}',
       ...options,
     });
   }
@@ -303,13 +312,13 @@ export class AuthService {
   }
 }
 
-export class ApiKeysService {
+export class ApiKeyService {
   /**
    * Get all apiKeys
    */
-  public static getApiKeys<ThrowOnError extends boolean = false>(options: Options<GetApiKeysData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).get<GetApiKeysResponse, unknown, ThrowOnError>({
-      url: '/teams/{teamId}/apiKeys',
+  public static getApiKeys<ThrowOnError extends boolean = false>(options?: Options<GetApiKeysData, ThrowOnError>) {
+    return (options?.client ?? _heyApiClient).get<GetApiKeysResponse, unknown, ThrowOnError>({
+      url: '/apiKeys',
       ...options,
     });
   }
@@ -319,7 +328,7 @@ export class ApiKeysService {
    */
   public static createApiKey<ThrowOnError extends boolean = false>(options: Options<CreateApiKeyData, ThrowOnError>) {
     return (options.client ?? _heyApiClient).post<CreateApiKeyResponse, unknown, ThrowOnError>({
-      url: '/teams/{teamId}/apiKeys',
+      url: '/apiKeys',
       ...options,
       headers: {
         'Content-Type': 'application/json',
@@ -333,7 +342,7 @@ export class ApiKeysService {
    */
   public static deleteApiKey<ThrowOnError extends boolean = false>(options: Options<DeleteApiKeyData, ThrowOnError>) {
     return (options.client ?? _heyApiClient).delete<DeleteApiKeyResponse, unknown, ThrowOnError>({
-      url: '/teams/{teamId}/apiKeys/{id}',
+      url: '/apiKeys/{id}',
       ...options,
     });
   }
@@ -343,7 +352,7 @@ export class ApiKeysService {
    */
   public static getApiKey<ThrowOnError extends boolean = false>(options: Options<GetApiKeyData, ThrowOnError>) {
     return (options.client ?? _heyApiClient).get<GetApiKeyResponse, unknown, ThrowOnError>({
-      url: '/teams/{teamId}/apiKeys/{id}',
+      url: '/apiKeys/{id}',
       ...options,
     });
   }
@@ -353,7 +362,7 @@ export class ApiKeysService {
    */
   public static updateApiKey<ThrowOnError extends boolean = false>(options: Options<UpdateApiKeyData, ThrowOnError>) {
     return (options.client ?? _heyApiClient).put<UpdateApiKeyResponse, unknown, ThrowOnError>({
-      url: '/teams/{teamId}/apiKeys/{id}',
+      url: '/apiKeys/{id}',
       ...options,
       headers: {
         'Content-Type': 'application/json',
@@ -454,11 +463,91 @@ export class MailService {
 
 export class HealthService {
   /**
-   * Get Health status
+   * Check health
    */
-  public static getHealth<ThrowOnError extends boolean = false>(options?: Options<GetHealthData, ThrowOnError>) {
-    return (options?.client ?? _heyApiClient).get<unknown, unknown, ThrowOnError>({
+  public static checkHealth<ThrowOnError extends boolean = false>(options?: Options<CheckHealthData, ThrowOnError>) {
+    return (options?.client ?? _heyApiClient).get<CheckHealthResponse, unknown, ThrowOnError>({
       url: '/health',
+      ...options,
+    });
+  }
+}
+
+export class AiCompletionService {
+  /**
+   * Generate AI completion with streaming response
+   */
+  public static generateCompletion<ThrowOnError extends boolean = false>(
+    options: Options<GenerateCompletionData, ThrowOnError>,
+  ) {
+    return (options.client ?? _heyApiClient).get<unknown, unknown, ThrowOnError>({
+      url: '/ai/completion/test-mcp',
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+    });
+  }
+
+  public static completionControllerGenerateCompletion<ThrowOnError extends boolean = false>(
+    options: Options<CompletionControllerGenerateCompletionData, ThrowOnError>,
+  ) {
+    return (options.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+      url: '/ai/completion',
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+    });
+  }
+}
+
+export class SseService {
+  public static sseControllerSse<ThrowOnError extends boolean = false>(
+    options?: Options<SseControllerSseData, ThrowOnError>,
+  ) {
+    return (options?.client ?? _heyApiClient).get<unknown, unknown, ThrowOnError>({
+      url: '/sse',
+      ...options,
+    });
+  }
+
+  public static sseControllerMessages<ThrowOnError extends boolean = false>(
+    options?: Options<SseControllerMessagesData, ThrowOnError>,
+  ) {
+    return (options?.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+      url: '/messages',
+      ...options,
+    });
+  }
+}
+
+export class StreamableHttpService {
+  public static streamableHttpControllerHandleDeleteRequest<ThrowOnError extends boolean = false>(
+    options?: Options<StreamableHttpControllerHandleDeleteRequestData, ThrowOnError>,
+  ) {
+    return (options?.client ?? _heyApiClient).delete<unknown, unknown, ThrowOnError>({
+      url: '/mcp',
+      ...options,
+    });
+  }
+
+  public static streamableHttpControllerHandleGetRequest<ThrowOnError extends boolean = false>(
+    options?: Options<StreamableHttpControllerHandleGetRequestData, ThrowOnError>,
+  ) {
+    return (options?.client ?? _heyApiClient).get<unknown, unknown, ThrowOnError>({
+      url: '/mcp',
+      ...options,
+    });
+  }
+
+  public static streamableHttpControllerHandlePostRequest<ThrowOnError extends boolean = false>(
+    options?: Options<StreamableHttpControllerHandlePostRequestData, ThrowOnError>,
+  ) {
+    return (options?.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+      url: '/mcp',
       ...options,
     });
   }

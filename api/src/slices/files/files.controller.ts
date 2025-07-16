@@ -1,23 +1,34 @@
-import { Get, Post, Delete, Body, Param, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
-import { ApiConsumes, ApiBody, ApiOperation } from '@nestjs/swagger';
+import { Get, Post, Delete, Body, Param, UseInterceptors, UploadedFile, Query, Controller } from '@nestjs/common';
+import { ApiConsumes, ApiBody, ApiOperation, ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './domain';
 import { UploadFileDto, FilterFileDto, FileDto, CreateFileDto, SignedUrlDto } from './dtos';
 import { ApiListResponse, ApiSingleResponse, ApiSuccessResponse } from '#core';
-import { TeamsController, Team } from '#users/teams';
+import { Team } from '../user/team/team.decorator';
 
-@TeamsController('files')
+@Controller('files')
+@ApiTags('files')
+@ApiBearerAuth()
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
-  @ApiOperation({ description: 'Upload a File', operationId: 'uploadFile' })
+  @ApiOperation({ description: 'Upload a file', operationId: 'uploadFile' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    type: UploadFileDto,
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
   })
-  @UseInterceptors(FileInterceptor('file'))
+  @ApiSuccessResponse()
   @Post('upload')
-  public async upload(@Team() team: any, @UploadedFile() file: Express.Multer.File) {
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Team() team: any) {
     return await this.filesService.uploadFile({
       teamId: team.id,
       dataBuffer: file.buffer,

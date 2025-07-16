@@ -1,5 +1,5 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { IS_PUBLIC_KEY } from '../users/auth/public.decorator';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { IS_PUBLIC_KEY } from '../user/auth/public.decorator';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()

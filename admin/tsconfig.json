@@ -1,9 +1,8 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "$schema": "http://json.schemastore.org/tsconfig",
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
+    "allowJs": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "verbatimModuleSyntax": false

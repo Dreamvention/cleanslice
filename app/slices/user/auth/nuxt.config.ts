@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   //https://i18n.nuxtjs.org/guide/layers#merging-locales
   modules: ['@nuxtjs/i18n'],
   alias: {
-    '#account': currentDir,
+    '#auth': currentDir,
   },
   i18n: {
     langDir: '../locales',

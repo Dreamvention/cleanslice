@@ -4,8 +4,10 @@ import { Icon } from '~/slices/setup/theme/components/ui/icon';
 
 definePageMeta({
   layout: 'auth',
+  skipTeamInit: true,
   auth: {
     public: true,
+    onlyNotAuthenticated: false,
   },
 });
 
@@ -13,10 +15,10 @@ const auth = useAuthStore();
 const isLoading = ref(true);
 
 onMounted(async () => {
-  await auth.logout();
   // Add a small delay to ensure smooth transition
-  setTimeout(() => {
+  setTimeout(async () => {
     isLoading.value = false;
+    await auth.logout();
   }, 1000);
 });
 

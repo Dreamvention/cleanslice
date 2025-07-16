@@ -1,86 +1,36 @@
-# APP Core for Nuxt
+# Setup
 
-install nuxt `npx nuxi@latest init` and name it `app`
-create folder `./slices`
-copy folder `setup` into `./slices`
-create file `./registerSlices.ts`
+### Install Pinia
 
-```ts
-import * as fs from 'fs';
-export const registerSlices = (): string[] => {
-  const slices = fs.readdirSync('./slices');
-  if (!slices.length) return [];
-  return slices?.filter((slice) => fs.existsSync(`./slices/${slice}`)).map((slice) => `./slices/${slice}`);
-};
+run in terminal
+
+```bash
+npm i @pinia/nuxt pinia
 ```
 
-add to `nuxt.config.ts`
-
-```ts
-export default defineNuxtConfig({
-  //...
-  extends: [...registerSlices()],
-});
-```
-
-### Install SCSS
-
-run `npm i -D sass sass-loader`
-
-create file `./assets/scss/main.scss`
-
-add to `nuxt.config.ts`
-
-```ts
-export default defineNuxtConfig({
-  css: ['~/assets/scss/main.scss'],
-});
-```
-
-### Vuetify
-
-run `npm i -D @invictus.codes/nuxt-vuetify`
-
-create file `./assets/scss/vuetify.scss`
-
-add to `nuxt.config.ts`
-
-```ts
-export default defineNuxtConfig({
-  modules: ['@invictus.codes/nuxt-vuetify'],
-  //...
-  vuetify: {
-    moduleOptions: {
-      /* vite-plugin-vuetify options */
-      autoImport: true,
-      styles: { configFile: '~/assets/scss/vuetify.scss' },
-    },
-  },
-});
-```
-
-### Pinia
-
-run `npm i @pinia/nuxt pinia`
-
-add to `nuxt.config.ts`
+add to slice `nuxt.config.ts`
 
 ```ts
 export default defineNuxtConfig({
   modules: ['@pinia/nuxt'],
   //...
   imports: {
+    // Required for pinia
     dirs: ['stores', 'slices/*/stores'],
   },
 });
 ```
 
-### Di
+### Install Di
 
-run `npm i tsyringe reflect-metadata`
-run `npm i -D @rollup/plugin-typescript`
+run in terminal
 
-add to `nuxt.config.ts`
+```bash
+npm i tsyringe reflect-metadata tslib nitropack`
+npm i -D @rollup/plugin-typescript
+```
+
+add to slice `nuxt.config.ts`
 
 ```ts
 import type { Nitro } from 'nitropack';
@@ -88,18 +38,23 @@ import typescript from '@rollup/plugin-typescript';
 
 export default defineNuxtConfig({
   hooks: {
+    // Required for DI
     'nitro:build:before': (nitro: Nitro) => {
       nitro.options.moduleSideEffects.push('reflect-metadata');
     },
   },
-  //...
   vite: {
+    // Required for DI
     plugins: [typescript()],
+  },
+  build: {
+    // Required for DI
+    transpile: ['tslib'],
   },
 });
 ```
 
-add to `tsconfig.json`
+add to root `tsconfig.json`
 
 ```json
 {
@@ -111,82 +66,45 @@ add to `tsconfig.json`
 }
 ```
 
-### CodeGen
+### Install i18n
 
-run `npm i -D openapi-typescript-codegen`
+run in terminal
 
-add to `package.json`
-
-```json
-{
-  "scripts": {
-    //...
-    "build:api": "openapi --input ../api/swagger-spec.json --output ./data/repositories/api --name ApiClient --client axios ",
-    "dev": "npm run build:api && nuxt dev"
-  }
-}
+```bash
+npm i -D @nuxtjs/i18n@next
 ```
 
-add file `./data/repositories/api/api.repository.ts`
-
-```ts
-/* generated using openapi-typescript-codegen -- do no edit */
-/* istanbul ignore file */
-/* tslint:disable */
-/* eslint-disable */
-import { injectable, inject } from 'tsyringe';
-import type { OpenAPIConfig } from './core/OpenAPI';
-import { ApiAxios } from '@/slices/setup/apiAxios';
-import { ApiClient } from './ApiClient';
-
-@injectable()
-export class ApiRepository extends ApiClient {
-  constructor(@inject('apiConfig') config: Partial<OpenAPIConfig>) {
-    super(config, ApiAxios);
-  }
-}
-```
-
-add file `./data/repositories/index.ts`
-
-```ts
-export * from './api/api.repository';
-```
-
-### Axios
-
-run `npm i -D axios axios-retry`
-
-### utils
-
-run `npm i -D tslib`
-
-### i18n
-
-run `npm i -D @nuxtjs/i18n@next`
-
-add to `nuxt.config.ts`
+add to slice `nuxt.config.ts`
 
 ```ts
 export default defineNuxtConfig({
   modules: ['@nuxtjs/i18n'],
   i18n: {
-    /* module options */
+    // required for i18n
+    vueI18n: './configs/i18n.config.ts',
+    // read more https://i18n.nuxtjs.org/options/vue-i18n
+    strategy: 'no_prefix',
+    defaultLocale: 'en',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root', // recommended
+    },
   },
 });
 ```
 
-add to `tsconfig.json`
+add to root `tsconfig.json`
 
 ```json
 {
   "compilerOptions": {
-    "outDir": "./dist"
+    "allowJs": false
   }
 }
 ```
 
-create file `i18n.config.ts`
+create file `i18n.config.ts` in `root/configs`
 
 ```ts
 // import your translations here.
@@ -198,12 +116,89 @@ export default defineI18nConfig(() => ({
   legacy: false,
   locale: 'en',
   messages: {
-    en: {
-      welcome: 'Welcome',
-    },
-    fr: {
-      welcome: 'Bienvenue',
-    },
+    // en: {
+    //   welcome: 'Welcome',
+    // },
+    // fr: {
+    //   welcome: 'Bienvenue',
+    // },
   },
 }));
+```
+
+### How to use i18n in slices
+
+In every slices extend languages like so
+
+```ts
+export default defineNuxtConfig({
+  //https://i18n.nuxtjs.org/guide/layers#merging-locales
+  modules: ['@nuxtjs/i18n'],
+  i18n: {
+    langDir: './locales',
+    locales: [
+      { code: 'en', file: 'en.json' },
+      { code: 'fr', file: 'fr.json' },
+    ],
+  },
+});
+```
+
+### How to localize dates
+
+Setup formats:
+
+Create file `i18n.config.ts` in `root/configs` add
+
+```ts
+export default defineI18nConfig(() => ({
+  //...
+  datetimeFormats: {
+    en: {
+      short: {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      },
+      long: {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        weekday: 'short',
+        hour: 'numeric',
+        minute: 'numeric',
+      },
+      time: {
+        hour: '2-digit',
+        minute: 'numeric',
+        hour12: true,
+      },
+    },
+    fr: {
+      //...
+    }
+})
+```
+
+In your components use `$d`
+
+```html
+<div>{{ $d(new Date(item.createdAt), 'short') }}</div>
+```
+
+or
+
+```html
+<i18n-d tag="span" :value="new Date(item.createdAt)" format="long"></i18n-d>
+```
+
+or
+
+Create file `.slices/common/utils/formatDate.ts` to use this method in any part of the app
+
+```ts
+export const formatDate = (date: string) => {
+  const { d } = useI18n();
+  return d(new Date(date), 'short');
+};
 ```

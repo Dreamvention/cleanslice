@@ -37,7 +37,7 @@ generator client {
 }
 
 //
-// apiKeys.prisma
+// apiKey.prisma
 //
 
 model ApiKey {
@@ -52,7 +52,21 @@ model ApiKey {
 }
 
 //
-// teams.prisma
+// role.prisma
+//
+
+model Role {
+  id          String   @id
+  name        String   @unique
+  permissions String   @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  TeamUser TeamUser[]
+}
+
+//
+// team.prisma
 //
 
 model Team {
@@ -69,19 +83,27 @@ model Team {
   teamUsers TeamUser[]
 }
 
+//
+// teamUser.prisma
+//
+
 model TeamUser {
   id        String   @id
+  userId    String?
+  email     String?
   teamId    String
-  team      Team     @relation(fields: [teamId], references: [id])
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  role      String
+  roleId    String
+  status    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+  team Team  @relation(fields: [teamId], references: [id])
+  role Role  @relation(fields: [roleId], references: [id])
 }
 
 //
-// users.prisma
+// user.prisma
 //
 
 model User {

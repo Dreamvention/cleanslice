@@ -5,28 +5,36 @@ const emits = defineEmits(['submit']);
 </script>
 
 <template>
-  <form class="space-y-6" @submit="onSubmit">
-    <FormField v-slot="{ componentField }" name="name">
-      <FormItem>
-        <FormLabel>Name</FormLabel>
-        <FormControl>
-          <Input v-bind="componentField" type="text" placeholder="Name" />
-        </FormControl>
-        <FormDescription> Give a public name for the Team</FormDescription>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField v-slot="{ componentField }" name="codename">
-      <FormItem>
-        <FormLabel>Codename</FormLabel>
-        <FormControl>
-          <Input v-bind="componentField" type="text" placeholder="Codename" />
-        </FormControl>
-        <FormDescription> Give your team a URL codename</FormDescription>
-        <FormMessage />
-      </FormItem>
-    </FormField>
+  <div>
+    <form class="space-y-6" @submit="onSubmit">
+      <FormField v-slot="{ componentField }" name="name">
+        <FormItem>
+          <FormLabel>Name</FormLabel>
+          <FormControl>
+            <Input v-bind="componentField" type="text" placeholder="Name" />
+          </FormControl>
+          <FormDescription> Give a public name for the Team</FormDescription>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+      <FormField v-slot="{ componentField }" name="codename">
+        <FormItem>
+          <FormLabel>Codename</FormLabel>
+          <FormControl>
+            <Input v-bind="componentField" type="text" placeholder="Codename" />
+          </FormControl>
+          <FormDescription> Give your team a URL codename</FormDescription>
+          <FormMessage />
+        </FormItem>
+      </FormField>
 
-    <Button type="submit"> Create team </Button>
-  </form>
+      <div class="flex justify-between items-center">
+        <NuxtLink to="/teams" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900">
+          <Icon name="ArrowLeft" class="w-4 h-4 mr-1" />
+          Back to Teams
+        </NuxtLink>
+        <Button type="submit"> Create team </Button>
+      </div>
+    </form>
+  </div>
 </template>

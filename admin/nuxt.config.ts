@@ -1,28 +1,21 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { registerSlices } from "./registerSlices";
-import type { Nitro } from "nitropack";
-import typescript from "@rollup/plugin-typescript";
+import { registerSlices } from './registerSlices';
+
+// import loadLanguages from './loadLanguages';
+
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   extends: [...registerSlices()],
-  modules: ["@invictus.codes/nuxt-vuetify", "@pinia/nuxt", "@nuxtjs/i18n"],
-  css: ["~/assets/scss/main.scss"],
-  hooks: {
-    "nitro:build:before": (nitro: Nitro) => {
-      nitro.options.moduleSideEffects.push("reflect-metadata");
-    },
-  },
-  vuetify: {
-    moduleOptions: {
-      /* vite-plugin-vuetify options */
-      autoImport: true,
-      // styles: { configFile: "~/assets/scss/vuetify.scss" },
-    },
-  },
+  ssr: false,
   vite: {
-    plugins: [typescript()],
+    define: {
+      'process.env': process.env,
+      __VUE_I18N_FULL_INSTALL__: true,
+      __VUE_I18N_LEGACY_API__: false,
+      __INTLIFY_PROD_DEVTOOLS__: false,
+    },
   },
-  imports: {
-    dirs: ["stores", "slices/*/stores"],
-  },
+
+  modules: ['@nuxt/image'],
+  compatibilityDate: '2024-10-04',
 });

@@ -69,7 +69,6 @@ import type {
   CheckHealthData,
   CheckHealthResponse,
   GenerateCompletionData,
-  CompletionControllerGenerateCompletionData,
   SseControllerSseData,
   SseControllerMessagesData,
   StreamableHttpControllerHandleDeleteRequestData,
@@ -475,23 +474,10 @@ export class HealthService {
 
 export class AiCompletionService {
   /**
-   * Generate AI completion with streaming response
+   * Generate AI completion with streaming response using MCP tools
    */
   public static generateCompletion<ThrowOnError extends boolean = false>(
     options: Options<GenerateCompletionData, ThrowOnError>,
-  ) {
-    return (options.client ?? _heyApiClient).get<unknown, unknown, ThrowOnError>({
-      url: '/ai/completion/test-mcp',
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
-    });
-  }
-
-  public static completionControllerGenerateCompletion<ThrowOnError extends boolean = false>(
-    options: Options<CompletionControllerGenerateCompletionData, ThrowOnError>,
   ) {
     return (options.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
       url: '/ai/completion',

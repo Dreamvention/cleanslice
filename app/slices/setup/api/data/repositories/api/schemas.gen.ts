@@ -141,6 +141,12 @@ export const UserDtoSchema = {
     id: {
       type: 'string',
     },
+    teams: {
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+    },
     name: {
       type: 'string',
     },
@@ -179,6 +185,7 @@ export const UserDtoSchema = {
   },
   required: [
     'id',
+    'teams',
     'name',
     'email',
     'emailConfirmed',
@@ -425,11 +432,35 @@ export const UpdateTeamDtoSchema = {
 export const CompletionDtoSchema = {
   type: 'object',
   properties: {
-    prompt: {
-      type: 'string',
-      description: 'The prompt text for AI completion',
-      example: 'Write a function to calculate the factorial of a number',
+    messages: {
+      type: 'array',
+      description: 'Array of messages for AI completion',
+      items: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+          },
+          role: {
+            type: 'string',
+          },
+          parts: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                type: {
+                  type: 'string',
+                },
+                text: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
-  required: ['prompt'],
+  required: ['messages'],
 } as const;

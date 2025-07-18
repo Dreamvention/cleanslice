@@ -54,6 +54,7 @@ export enum Role {
 
 export type UserDto = {
   id: string;
+  teams: Array<string>;
   name: string;
   email: string;
   emailConfirmed: boolean;
@@ -147,9 +148,16 @@ export type UpdateTeamDto = {
 
 export type CompletionDto = {
   /**
-   * The prompt text for AI completion
+   * Array of messages for AI completion
    */
-  prompt: string;
+  messages: Array<{
+    id?: string;
+    role?: string;
+    parts?: Array<{
+      type?: string;
+      text?: string;
+    }>;
+  }>;
 };
 
 export type UploadFileData = {
@@ -777,7 +785,7 @@ export type GenerateCompletionData = {
   body: CompletionDto;
   path?: never;
   query?: never;
-  url: '/ai/completion/test-mcp';
+  url: '/ai/completion';
 };
 
 export type GenerateCompletionErrors = {
@@ -792,17 +800,6 @@ export type GenerateCompletionResponses = {
    * Streaming AI completion response
    */
   200: unknown;
-};
-
-export type CompletionControllerGenerateCompletionData = {
-  body: CompletionDto;
-  path?: never;
-  query?: never;
-  url: '/ai/completion';
-};
-
-export type CompletionControllerGenerateCompletionResponses = {
-  201: unknown;
 };
 
 export type SseControllerSseData = {

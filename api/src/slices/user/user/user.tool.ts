@@ -16,17 +16,17 @@ import { Team } from '#user/team/team.decorator';
 
 @Injectable()
 export class UserTool {
-  constructor(private userGateway: IUserGateway) {}
+  constructor(private userGateway: IUserGateway) { }
 
   @Tool({
     name: 'getUsers',
-    description: 'Retrieves users based on provided filters.',
+    description: 'Retrieves users based on provided filters. If no search parameter is provided, returns all users.',
     parameters: z.object({
-      search: z.string().optional(),
-      role: z.string().optional(),
-      status: z.string().optional(),
-      page: z.number().optional(),
-      perPage: z.number().optional(),
+      search: z.string().nullable(),
+      role: z.string().nullable(),
+      status: z.string().nullable(),
+      page: z.number().nullable(),
+      perPage: z.number().nullable(),
     }),
   })
   async getUsers(query: FilterUserDto, context: Context, request: Request) {
@@ -71,9 +71,9 @@ export class UserTool {
     description: 'Updates an existing user.',
     parameters: z.object({
       id: z.string().describe('The ID of the user to update'),
-      name: z.string().optional().describe('User name'),
-      email: z.string().optional().describe('User email address'),
-      roles: z.array(z.string()).optional().describe('User roles'),
+      name: z.string().nullable().describe('User name'),
+      email: z.string().nullable().describe('User email address'),
+      roles: z.array(z.string()).nullable().describe('User roles'),
     }),
   })
   async updateUser(parameters: any, context: Context, request: Request) {

@@ -71,14 +71,18 @@ export class CompletionController {
         messages: aiMessages,
         system: `You are a helpful AI assistant with access to various tools to retrieve and analyze data.
 
-When you use tools to get data:
-1. Always provide a clear and informative response based on the data you receive
-2. Analyze the data and give meaningful insights
-3. Format your response in a user-friendly way
-4. If you receive user data, summarize key information like names, emails, roles, and team memberships
-5. Be conversational and helpful in your explanations
+IMPORTANT: Always show your thinking process before using tools. When you need to use a tool:
+1. First, explain what you're thinking and why you need to use a tool
+2. Then use the appropriate tool to get the data
+3. Finally, provide a clear and informative response based on the data you receive
+4. Analyze the data and give meaningful insights
+5. Format your response in a user-friendly way
+6. If you receive user data, summarize key information like names, emails, roles, and team memberships
+7. Be conversational and helpful in your explanations
 
-For example, if you get user data, you might say: "I found X users in the system. Here's a summary: [user details]..."`,
+For example, if you get user data, you might say: "I found X users in the system. Here's a summary: [user details]..."
+
+Always start your responses with your reasoning before taking any action.`,
         onFinish: async () => {
           console.log('Streaming finished, closing MCP clients');
           await this.closeAllClients(mcpClients);
@@ -89,7 +93,7 @@ For example, if you get user data, you might say: "I found X users in the system
         },
       });
 
-      result.pipeUIMessageStreamToResponse(res)
+      result.pipeUIMessageStreamToResponse(res);
     } catch (error) {
       console.error('Completion error:', error);
       await this.closeAllClients(mcpClients);
@@ -103,28 +107,27 @@ For example, if you get user data, you might say: "I found X users in the system
     if (!messages) return [];
 
     return messages
-      .filter(message => {
+      .filter((message) => {
         // Filter out messages that contain UI-specific parts like step-start, tool-invocation
-        const hasValidParts = message.parts.some(part => part.type === 'text' && part.text);
+        const hasValidParts = message.parts.some((part) => part.type === 'text' && part.text);
         return hasValidParts;
       })
-      .map(message => {
+      .map((message) => {
         // Only include text parts
         const textParts = message.parts
-          .filter(part => part.type === 'text' && part.text)
-          .map(part => ({
+          .filter((part) => part.type === 'text' && part.text)
+          .map((part) => ({
             type: 'text' as const,
-            text: part.text
+            text: part.text,
           }));
 
         return {
           role: message.role as 'user' | 'assistant',
-          content: textParts
+          content: textParts,
         };
       })
-      .filter(message => message.content.length > 0); // Remove messages with no valid content
+      .filter((message) => message.content.length > 0); // Remove messages with no valid content
   }
-
 
   /**
    * Safely close all MCP clients

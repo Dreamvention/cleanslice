@@ -44,12 +44,25 @@ export const handleError = async (error: any) => {
   if (error.response.data.code) {
     try {
       const code = error.response.data.code;
+      const apiMessage = error.response.data.message;
+
+      // Try to use the actual API error message if available
+      let title = app.$i18n.t(`${code}_title`);
+      let description = apiMessage || app.$i18n.t(`${code}_description`, {
+        supportLink: `<strong><a href="mailto:support@cleanslice.com">support@cleanslice.com</a></strong>`,
+      });
+
+      // If translation doesn't exist, use fallbacks
+      if (title === `${code}_title`) {
+        title = 'Error';
+      }
+      if (description === `${code}_description` && apiMessage) {
+        description = apiMessage;
+      }
 
       toast({
-        title: app.$i18n.t(`${code}_title`),
-        description: app.$i18n.t(`${code}_description`, {
-          supportLink: `<strong><a href="mailto:support@cleanslice.com">support@cleanslice.com</a></strong>`,
-        }),
+        title,
+        description,
         variant: 'destructive',
       });
     } catch (e) {

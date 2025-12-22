@@ -69,7 +69,7 @@ async function bootstrap() {
   // Important! Create a swagger spec file for Code Generator, which is used in the frontend.
   fs.writeFileSync('swagger-spec.json', JSON.stringify(document));
 
-  console.log(process.env.PORT ?? 3333);
-  await app.listen(process.env.PORT ?? 3333);
+  console.log(process.env.PORT ?? 3334);
+  await app.listen(process.env.PORT ?? 3334);
 }
 bootstrap();

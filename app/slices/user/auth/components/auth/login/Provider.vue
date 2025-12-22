@@ -1,7 +1,27 @@
 <script lang="ts" setup>
+import { useToast } from '#theme/components/ui/toast/use-toast';
+import { useErrorStore } from '@/slices/setup/error/stores/error';
+
 const authStore = useAuthStore();
+const errorStore = useErrorStore();
+const { toast } = useToast();
+
 const login = async (data: { email: string; password: string }) => {
-  await authStore.login({ ...data, deviceId: 'app' });
+  const success = await authStore.login({ ...data, deviceId: 'app' });
+  
+  if (!success) {
+    // Check if there's an error in the error store
+    const error = errorStore.getError('auth_login');
+    if (error) {
+      toast({
+        title: 'Login Failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+      // Clear the error after showing it
+      errorStore.clearError('auth_login');
+    }
+  }
 };
 </script>
 

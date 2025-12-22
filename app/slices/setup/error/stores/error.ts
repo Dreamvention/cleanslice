@@ -77,7 +77,21 @@ export const useErrorStore = defineStore('error', {
       let message = defaultMessage;
       let metadata: Record<string, unknown> | undefined;
 
-      if (error instanceof Error) {
+      // Check if it's an API error response with specific structure
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as any;
+        if (apiError.response?.data?.message) {
+          // Use the actual API error message
+          message = apiError.response.data.message;
+          metadata = { 
+            code: apiError.response.data.code,
+            statusCode: apiError.response.data.statusCode,
+            originalError: error 
+          };
+        } else if (apiError.response?.data) {
+          metadata = { response: apiError.response.data, originalError: error };
+        }
+      } else if (error instanceof Error) {
         message = error.message;
         metadata = { stack: error.stack };
       } else if (typeof error === 'object' && error !== null) {
